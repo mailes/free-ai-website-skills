@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rhea Vale — 3D Creator</title>
+<meta name="description" content="Portfolio of Rhea Vale, a fictional 3D creator — selected work, services and studio practice. Demo site with original procedural renders.">
+<style>
+/* ---------- fonts (Kanit, SIL OFL 1.1 — see assets/fonts/OFL.txt) ---------- */
+@font-face{font-family:'Kanit';font-style:normal;font-weight:300;font-display:swap;src:url('assets/fonts/kanit-300.woff2') format('woff2')}
+@font-face{font-family:'Kanit';font-style:normal;font-weight:400;font-display:swap;src:url('assets/fonts/kanit-400.woff2') format('woff2')}
+@font-face{font-family:'Kanit';font-style:normal;font-weight:500;font-display:swap;src:url('assets/fonts/kanit-500.woff2') format('woff2')}
+@font-face{font-family:'Kanit';font-style:normal;font-weight:900;font-display:swap;src:url('assets/fonts/kanit-900.woff2') format('woff2')}
+
+/* ---------- tokens ---------- */
+:root{
+  --bg:#0C0E11; --ink:#D8E1E7; --ink-dim:rgba(216,225,231,.6);
+  --grad-a:#5F6672; --grad-b:#C3D3DD;
+  --teal:#17A9AE; --amber:#E8A13C;
+  --pill-a:#062A31; --pill-b:#0E8C96; --pill-c:#23C4B9; --pill-d:#B7F1E6;
+  --pad-x:clamp(1.25rem,2.5vw,2.5rem);
+  --ease:cubic-bezier(.25,.1,.25,1);
+  --sticky-top:24px; --slot:85vh;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Kanit',sans-serif;font-weight:400;overflow-x:clip;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+.grad-text{background:linear-gradient(180deg,var(--grad-a) 0%,var(--grad-b) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.wrap{padding-inline:var(--pad-x)}
+
+/* ---------- motion primitives ---------- */
+.js [data-motion]{opacity:0;will-change:transform,opacity;transition:transform .7s var(--ease),opacity .7s var(--ease);transition-delay:0ms}
+.js [data-motion].in{opacity:1;transform:none!important}
+html.reduced [data-motion]{opacity:1!important;transform:none!important;transition:none!important}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:4px}
+
+/* ---------- nav ---------- */
+.nav{position:relative;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1.5rem var(--pad-x) 0}
+@media(min-width:768px){.nav{padding-top:2rem}}
+.nav a{color:var(--ink);text-decoration:none;font-weight:500;text-transform:uppercase;letter-spacing:.08em;font-size:.875rem;transition:opacity .2s ease}
+@media(min-width:768px){.nav a{font-size:1.05rem}}
+@media(min-width:1024px){.nav a{font-size:1.4rem}}
+.nav a:hover{opacity:.7}
+.nav .brand{font-weight:900;letter-spacing:.06em}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;overflow:clip}
+.hero-heading{font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:1;white-space:nowrap;width:100%;font-size:14vw;margin-top:1.5rem}
+@media(min-width:640px){.hero-heading{font-size:15vw;margin-top:1rem}}
+@media(min-width:768px){.hero-heading{font-size:16vw;margin-top:-1.25rem}}
+@media(min-width:1024px){.hero-heading{font-size:17.5vw;margin-top:-1.25rem}}
+.hero-heading .clip{display:block;overflow:hidden}
+.hero-bottom{display:flex;justify-content:space-between;align-items:flex-end;padding:0 var(--pad-x) 1.75rem;margin-top:auto;position:relative;z-index:20}
+@media(min-width:640px){.hero-bottom{padding-bottom:2rem}}
+@media(min-width:768px){.hero-bottom{padding-bottom:2.5rem}}
+.hero-tagline{font-weight:300;text-transform:uppercase;letter-spacing:.06em;line-height:1.35;font-size:clamp(.75rem,1.4vw,1.5rem);max-width:160px}
+@media(min-width:640px){.hero-tagline{max-width:220px}}
+@media(min-width:768px){.hero-tagline{max-width:260px}}
+.hero-portrait{position:absolute;left:50%;transform:translateX(-50%);top:50%;translate:0 -50%;z-index:10;width:clamp(240px,56vw,280px);pointer-events:none}
+@media(min-width:640px){.hero-portrait{top:auto;translate:none;bottom:0;width:clamp(320px,36vw,520px)}}
+.hero-portrait img{width:100%;height:auto}
+.magnet{will-change:transform;transition:transform .6s ease-in-out}
+.magnet.active{transition:transform .3s ease-out}
+html.reduced .magnet{transform:none!important}
+
+/* ---------- pill buttons ---------- */
+.pill{display:inline-block;border-radius:999px;text-transform:uppercase;letter-spacing:.14em;font-weight:500;color:#fff;text-decoration:none;font-size:.75rem;padding:.75rem 2rem;white-space:nowrap}
+@media(min-width:640px){.pill{font-size:.875rem;padding:.875rem 2.5rem}}
+@media(min-width:768px){.pill{font-size:1rem;padding:1rem 3rem}}
+.pill-cta{background:linear-gradient(123deg,var(--pill-a) 7%,var(--pill-b) 37%,var(--pill-c) 72%,var(--pill-d) 100%);box-shadow:0 4px 4px rgba(14,140,150,.25),4px 4px 12px rgba(14,140,150,.35) inset;outline:2px solid #fff;outline-offset:-3px}
+.pill-cta:hover{filter:brightness(1.08)}
+.pill-ghost{border:2px solid var(--ink);color:var(--ink);background:transparent;font-size:.8rem;padding:.65rem 1.6rem}
+@media(min-width:640px){.pill-ghost{font-size:.95rem;padding:.8rem 2.2rem}}
+.pill-ghost:hover{background:rgba(216,225,231,.1)}
+
+/* ---------- marquee / reel ---------- */
+.reel{padding:6rem 0 2.5rem;overflow:clip}
+@media(min-width:640px){.reel{padding:8rem 0 2.5rem}}
+@media(min-width:768px){.reel{padding:10rem 0 2.5rem}}
+.reel-row{display:flex;gap:12px;will-change:transform}
+.reel-row+.reel-row{margin-top:12px}
+.reel-row img{width:420px;height:270px;object-fit:cover;border-radius:16px;flex:none}
+@media(max-width:640px){.reel-row img{width:min(72vw,420px);height:min(46vw,270px)}}
+
+/* ---------- about ---------- */
+.about{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:5rem var(--pad-x);overflow:clip}
+.about h2{font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:1;font-size:clamp(3rem,12vw,160px)}
+.about-text{color:var(--ink);font-weight:500;line-height:1.7;max-width:560px;font-size:clamp(1rem,2vw,1.35rem);margin-top:clamp(2.5rem,7vw,4rem)}
+.about .pill-cta{margin-top:clamp(4rem,9vw,6rem)}
+.deco{position:absolute;pointer-events:none;width:120px}
+@media(min-width:640px){.deco{width:160px}}
+@media(min-width:768px){.deco{width:200px}}
+.deco img{width:100%;height:auto}
+.deco-tl{top:4%;left:2%}
+.deco-tr{top:4%;right:2%}
+.deco-bl{bottom:8%;left:6%}
+.deco-br{bottom:8%;right:6%}
+@media(min-width:768px){.deco-tl{left:4%}.deco-tr{right:4%}.deco-bl{left:10%}.deco-br{right:10%}}
+.deco-bl,.deco-br{width:100px}
+@media(min-width:640px){.deco-bl,.deco-br{width:140px}}
+@media(min-width:768px){.deco-bl,.deco-br{width:180px}}
+
+/* ---------- services ---------- */
+.services{background:#fff;color:#0E1013;border-radius:40px 40px 0 0;padding:5rem var(--pad-x) 7rem}
+@media(min-width:640px){.services{border-radius:50px 50px 0 0;padding-top:6rem}}
+@media(min-width:768px){.services{border-radius:60px 60px 0 0;padding:8rem var(--pad-x) 9rem}}
+.services h2{font-weight:900;text-transform:uppercase;text-align:center;line-height:1;font-size:clamp(3rem,12vw,160px);margin-bottom:clamp(4rem,10vw,7rem)}
+.service-list{max-width:64rem;margin:0 auto;display:flex;flex-direction:column}
+.service{display:flex;gap:clamp(1rem,4vw,3rem);align-items:flex-start;padding:2rem 0;border-top:1px solid rgba(12,12,12,.15)}
+.service:last-child{border-bottom:1px solid rgba(12,12,12,.15)}
+@media(min-width:640px){.service{padding:2.5rem 0}}
+@media(min-width:768px){.service{padding:3rem 0}}
+.service .num{font-weight:900;line-height:.9;font-size:clamp(3rem,10vw,140px);color:#0E1013;flex:none}
+.service .name{font-weight:500;text-transform:uppercase;font-size:clamp(1rem,2.2vw,2.1rem);letter-spacing:.02em}
+.service .desc{font-weight:300;line-height:1.6;max-width:42rem;font-size:clamp(.85rem,1.6vw,1.25rem);opacity:.6;margin-top:.5rem}
+
+/* ---------- work / stacked cards ---------- */
+.work{position:relative;z-index:10;background:var(--bg);border-radius:40px 40px 0 0;margin-top:-2.5rem;padding:5rem 0 8rem;overflow:clip}
+@media(min-width:640px){.work{border-radius:50px 50px 0 0;margin-top:-3rem}}
+@media(min-width:768px){.work{border-radius:60px 60px 0 0;margin-top:-3.5rem;padding:8rem 0 10rem}}
+.work h2{font-weight:900;text-transform:uppercase;text-align:center;line-height:1;font-size:clamp(3rem,12vw,160px);padding:0 var(--pad-x);margin-bottom:clamp(3.5rem,9vw,6.5rem)}
+.stack{max-width:76rem;margin:0 auto;padding:0 var(--pad-x)}
+.card-slot{height:var(--slot)}
+.card{position:sticky;top:var(--sticky-top);border-radius:40px;border:2px solid var(--ink);background:var(--bg);padding:1rem;height:calc(100% - 170px);display:flex;flex-direction:column;transform-origin:top center;will-change:transform}
+@media(min-width:640px){.card{border-radius:50px;padding:1.5rem}}
+@media(min-width:768px){.card{border-radius:60px;padding:2rem}}
+.card-slot:nth-child(2) .card{top:calc(var(--sticky-top) + 28px)}
+.card-slot:nth-child(3) .card{top:calc(var(--sticky-top) + 56px)}
+.card-top{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding:.5rem .5rem 1rem}
+.card .num{font-weight:900;line-height:.9;font-size:clamp(2.6rem,9vw,120px)}
+.card .meta{display:flex;flex-direction:column;gap:.15rem;min-width:0;flex:1}
+.card .cat{font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;color:var(--ink-dim)}
+@media(min-width:640px){.card .cat{font-size:.8rem}}
+.card .title{font-weight:500;text-transform:uppercase;font-size:clamp(1.1rem,2.6vw,2rem);letter-spacing:.02em}
+.card .pill-ghost{margin-left:auto}
+.card-grid{flex:1;display:grid;grid-template-columns:2fr 3fr;gap:12px;min-height:0}
+.card-col{display:flex;flex-direction:column;gap:12px;min-height:0}
+.card-col img{width:100%;object-fit:cover;border-radius:40px;min-height:0}
+@media(min-width:640px){.card-col img{border-radius:50px}}
+@media(min-width:768px){.card-col img{border-radius:60px}}
+.img-a{height:clamp(120px,14vw,230px)}
+.img-b{flex:1}
+.card-col.right img{height:100%}
+.card{cursor:pointer}
+html.reduced .card{transform:none!important}
+
+/* ---------- contact footer ---------- */
+.contact{border-top:1px solid rgba(216,225,231,.14);padding:6rem var(--pad-x) 3rem;text-align:center}
+.contact h2{font-weight:900;text-transform:uppercase;line-height:1.05;font-size:clamp(2.2rem,7vw,5.5rem)}
+.contact p{color:var(--ink-dim);font-weight:300;margin-top:1.25rem;font-size:clamp(.95rem,1.5vw,1.15rem)}
+.contact .pill-cta{margin-top:2.5rem}
+.contact .fine{margin-top:4rem;font-size:.75rem;color:rgba(216,225,231,.45);font-weight:300}
+.contact .links{margin-top:1rem;display:flex;gap:1.5rem;justify-content:center}
+.contact .links a{color:var(--ink-dim);font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;text-decoration:none}
+.contact .links a:hover{color:var(--ink)}
+
+/* ---------- case detail overlay ---------- */
+.case{position:fixed;inset:0;z-index:100;background:var(--bg);overflow-y:auto;overscroll-behavior:contain;opacity:0;visibility:hidden;transition:opacity .35s var(--ease),visibility 0s .35s}
+.case.open{opacity:1;visibility:visible;transition:opacity .35s var(--ease)}
+html.reduced .case{transition:none}
+.case-inner{max-width:76rem;margin:0 auto;padding:0 var(--pad-x) 5rem;transform:translateY(14px);transition:transform .35s var(--ease)}
+.case.open .case-inner{transform:none}
+html.reduced .case-inner{transform:none!important;transition:none}
+.case-bar{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:1.25rem var(--pad-x);background:linear-gradient(180deg,rgba(12,14,17,.92),rgba(12,14,17,0));margin:0 calc(-1 * var(--pad-x))}
+.case-bar .back{border:2px solid var(--ink);background:transparent;color:var(--ink);border-radius:999px;padding:.6rem 1.5rem;font-family:inherit;font-size:.8rem;text-transform:uppercase;letter-spacing:.14em;font-weight:500;cursor:pointer}
+.case-bar .back:hover{background:rgba(216,225,231,.1)}
+.case-bar .idx{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim)}
+.case-hero{border-radius:40px;overflow:hidden;margin-top:.5rem}
+@media(min-width:768px){.case-hero{border-radius:60px}}
+.case-hero img{width:100%;height:clamp(240px,42vh,460px);object-fit:cover}
+.case h1{font-weight:900;text-transform:uppercase;line-height:1;font-size:clamp(2.4rem,8vw,6rem);margin-top:2rem}
+.case .lede{color:var(--ink);font-weight:300;line-height:1.7;font-size:clamp(1rem,1.8vw,1.3rem);max-width:60rem;margin-top:1.25rem}
+.case-facts{display:flex;gap:2.5rem;flex-wrap:wrap;margin-top:2rem;border-top:1px solid rgba(216,225,231,.14);border-bottom:1px solid rgba(216,225,231,.14);padding:1.25rem 0}
+.case-facts div{min-width:120px}
+.case-facts dt{font-size:.68rem;text-transform:uppercase;letter-spacing:.18em;color:var(--ink-dim)}
+.case-facts dd{font-weight:500;font-size:1rem;margin-top:.3rem}
+.case h3{font-weight:500;text-transform:uppercase;letter-spacing:.06em;font-size:1rem;color:var(--ink-dim);margin:3rem 0 1rem}
+.case .steps{display:grid;gap:1rem}
+.case .step{border:1px solid rgba(216,225,231,.14);border-radius:20px;padding:1.25rem 1.5rem}
+.case .step b{display:block;font-weight:500;text-transform:uppercase;font-size:.95rem;letter-spacing:.04em}
+.case .step span{font-weight:300;color:var(--ink-dim);font-size:.95rem;line-height:1.6;margin-top:.35rem;display:block}
+.case .gallery{display:grid;grid-template-columns:2fr 3fr;gap:12px}
+.case .gallery img{width:100%;height:100%;object-fit:cover;border-radius:32px}
+@media(min-width:768px){.case .gallery img{border-radius:48px}}
+.case .gallery .col{display:flex;flex-direction:column;gap:12px;min-height:0}
+.case .gallery .col img{min-height:0}
+.case .deliver{display:flex;flex-wrap:wrap;gap:.6rem}
+.case .deliver span{border:1px solid rgba(216,225,231,.25);border-radius:999px;padding:.4rem 1rem;font-size:.8rem;font-weight:300;color:var(--ink)}
+.case-nav{display:flex;justify-content:space-between;gap:1rem;margin-top:4rem;border-top:1px solid rgba(216,225,231,.14);padding-top:2rem}
+.case-nav button{background:transparent;border:2px solid var(--ink);color:var(--ink);border-radius:999px;padding:.8rem 1.8rem;font-family:inherit;font-size:.85rem;text-transform:uppercase;letter-spacing:.12em;font-weight:500;cursor:pointer}
+.case-nav button:hover{background:rgba(216,225,231,.1)}
+.case-note{margin-top:3rem;font-size:.72rem;color:rgba(216,225,231,.45);font-weight:300}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js');
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('reduced');</script>
+
+<header class="hero" id="top">
+  <nav class="nav" data-motion data-y="-20" aria-label="Main">
+    <a class="brand" href="#top">Rhea Vale</a>
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#work">Work</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="hero-heading" aria-hidden="false">
+    <span class="clip"><span class="grad-text" data-motion data-y="40" data-delay="150" style="display:block">Hi, i'm rhea</span></span>
+  </div>
+  <div class="hero-portrait">
+    <div data-motion data-y="30" data-delay="600">
+      <div class="magnet" id="magnet">
+        <img src="assets/hero-object.png" alt="Stylized 3D character bust portrait of Rhea Vale with dark teal hair highlights" width="1080" height="1080">
+      </div>
+    </div>
+  </div>
+  <div class="hero-bottom">
+    <p class="hero-tagline" data-motion data-y="20" data-delay="350">a 3d creator shaping bold products, brand worlds and motion</p>
+    <a class="pill pill-cta" href="#contact" data-motion data-y="20" data-delay="500">Contact Me</a>
+  </div>
+</header>
+
+<section class="reel" id="reel" aria-label="Render reel">
+  <div class="reel-row" id="reelRow1"></div>
+  <div class="reel-row" id="reelRow2"></div>
+</section>
+
+<section class="about" id="about">
+  <div class="deco deco-tl" data-motion data-x="-80" data-delay="100" data-dur="900"><img src="assets/deco-moon.png" alt="" aria-hidden="true"></div>
+  <div class="deco deco-tr" data-motion data-x="80" data-delay="150" data-dur="900"><img src="assets/deco-tower.png" alt="" aria-hidden="true"></div>
+  <div class="deco deco-bl" data-motion data-x="-80" data-delay="250" data-dur="900"><img src="assets/deco-ring.png" alt="" aria-hidden="true"></div>
+  <div class="deco deco-br" data-motion data-x="80" data-delay="300" data-dur="900"><img src="assets/deco-pillars.png" alt="" aria-hidden="true"></div>
+  <h2 class="grad-text" data-motion data-y="40">About</h2>
+  <p class="about-text" id="aboutText">Eight years of studio practice sit behind every render on this page — modelling, look development and motion for product, brand and play. I like slow shapes, honest materials and images that hold up at full size. Let's build something unforgettable together!</p>
+  <a class="pill pill-cta" href="#contact" data-motion data-y="30">Contact Me</a>
+</section>
+
+<section class="services" id="services">
+  <h2 data-motion data-y="40">Services</h2>
+  <div class="service-list" id="serviceList"></div>
+</section>
+
+<section class="work" id="work">
+  <h2 class="grad-text" data-motion data-y="40">Project</h2>
+  <div class="stack" id="stack"></div>
+</section>
+
+<footer class="contact" id="contact">
+  <div data-motion data-y="30">
+    <h2 class="grad-text">Let's build<br>something together</h2>
+    <p>Studio enquiries, collaborations and renders-in-progress are all welcome.</p>
+    <a class="pill pill-cta" href="mailto:hello@rheavale.example">hello@rheavale.example</a>
+    <div class="links"><a href="#about">About</a><a href="#services">Services</a><a href="#work">Work</a></div>
+    <p class="fine">Demo site. Rhea Vale, clients, projects and contact details are fictional examples; all imagery is original procedural artwork.</p>
+  </div>
+</footer>
+
+<div class="case" id="caseView" role="dialog" aria-modal="true" aria-labelledby="caseTitle" hidden></div>
+
+<script>
+/* ============================================================
+   Rhea Vale — data
+   ============================================================ */
+const SERVICES = [
+  {n:'01',name:'3D Art Direction',d:'Look development and scene design that give product and brand work a single, deliberate point of view.'},
+  {n:'02',name:'Modeling & Props',d:'Clean topology and production-ready assets — products, props and environments for games, film and commerce.'},
+  {n:'03',name:'Rendering',d:'Photoreal and stylized renders with custom lighting, materials and camera work, built to survive the crop.'},
+  {n:'04',name:'Motion & Loops',d:'Seamless product loops, title animations and site motion that keep pages alive without stealing the show.'},
+  {n:'05',name:'Web 3D',d:'Lightweight 3D for the browser: interactive viewers, scroll scenes and shaders that stay fast on real devices.'}
+];
+
+const PROJECTS = [
+  {
+    slug:'porcelain-goods', num:'01', cat:'Client Work', title:'Porcelain Goods',
+    lede:'A hero-render series for a fictional homeware label — soft porcelain forms, warm studio light and shadows that keep the set calm at any size.',
+    facts:{Role:'Modeling & rendering',Year:'2026',Client:'Porcelain Goods (example)',Scope:'7 renders'},
+    steps:[
+      ['Brief & references','The label wanted catalogue imagery that felt handmade, not clinical. We collected ceramic studio references and locked a warm, low-contrast light plan before any modelling.'],
+      ['Modeling & look dev','Rounded primitives, matte porcelain shaders and one accent colour each. Every asset shares the same studio rig so the series reads as one family.'],
+      ['Render & grade','Soft shadows, distance-faded floors and a light filmic grade. Crops were planned in camera so each image survives its catalogue slot.']
+    ],
+    deliver:['Hero renders','Catalogue crops','Lighting rig','Style guide'],
+    outcome:'The series now anchors the label\'s lookbook and web gallery (demo usage).',
+    images:['assets/case-porcelain-a.webp','assets/case-porcelain-b.webp','assets/case-porcelain-c.webp'],
+    card:['assets/case-porcelain-a.webp','assets/case-porcelain-b.webp','assets/case-porcelain-c.webp']
+  },
+  {
+    slug:'orbit-identity', num:'02', cat:'Personal', title:'Orbit Identity',
+    lede:'A self-initiated study of chrome, thin rings and weightless composition — an identity exercise where every mark is a rendered object, not a drawing.',
+    facts:{Role:'Everything',Year:'2026',Client:'Self-initiated',Scope:'Identity study'},
+    steps:[
+      ['Theme','Orbits: a sphere, a ring and a moon can carry a whole identity if the light stays consistent. Space palette locked to deep teal.'],
+      ['Objects','Chrome spheres and hairline rings rendered against a dark field; each composition tests balance, overlap and scale contrast.'],
+      ['Application','Compositions were framed for avatars, covers and widescreen headers (demo usage).']
+    ],
+    deliver:['Mark studies','Dark field renders','Cover frames','Loop tests'],
+    outcome:'Three compositions kept as the studio\'s own signature objects.',
+    images:['assets/case-orbit-a.webp','assets/case-orbit-b.webp','assets/case-orbit-c.webp'],
+    card:['assets/case-orbit-a.webp','assets/case-orbit-b.webp','assets/case-orbit-c.webp']
+  },
+  {
+    slug:'signal-machines', num:'03', cat:'Client Work', title:'Signal Machines',
+    lede:'Playful clay machinery for a dev-tools brand launch — teal and amber machines on a pale gallery floor, built to loop without a cut.',
+    facts:{Role:'Modeling & motion',Year:'2026',Client:'Signal Machines (example)',Scope:'Launch set'},
+    steps:[
+      ['Concept','Machines that explain features by doing nothing at all — friendly forms, one accent colour per machine, zero text.'],
+      ['Build','Capsule clusters, torus drums and pedestal forms; the pale floor keeps every silhouette readable at thumbnail size.'],
+      ['Loop','Camera moves planned as perfect circles so each shot loops seamlessly (demo renders shown).']
+    ],
+    deliver:['Launch renders','Loop studies','Colour system','Social crops'],
+    outcome:'Launch set shipped across the campaign\'s site and socials (demo usage).',
+    images:['assets/case-signal-a.webp','assets/case-signal-b.webp','assets/case-signal-c.webp'],
+    card:['assets/case-signal-a.webp','assets/case-signal-b.webp','assets/case-signal-c.webp']
+  }
+];
+
+const REEL = ['reel-01','reel-02','reel-03','reel-04','reel-05','reel-06','reel-07','reel-08',
+              'reel-09','reel-10','reel-11','reel-12','reel-13','reel-14','reel-15','reel-16']
+  .map(n => `assets/${n}.webp`);
+
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const NO_HOVER = matchMedia('(hover: none)').matches;
+const $ = s => document.querySelector(s);
+
+/* ---------- build: services ---------- */
+$('#serviceList').innerHTML = SERVICES.map((s,i)=>`
+  <div class="service" data-motion data-y="30" data-delay="${i*100}">
+    <div class="num">${s.n}</div>
+    <div><div class="name">${s.name}</div><p class="desc">${s.d}</p></div>
+  </div>`).join('');
+
+/* ---------- build: reel rows (tripled for a seamless scroll-driven loop) ---------- */
+const row1 = REEL.slice(0,8), row2 = REEL.slice(8);
+const tiles = list => [...list,...list,...list].map(src=>`<img src="${src}" alt="" loading="lazy" decoding="async" width="840" height="540">`).join('');
+$('#reelRow1').innerHTML = tiles(row1);
+$('#reelRow2').innerHTML = tiles(row2);
+
+/* ---------- build: stacked project cards ---------- */
+$('#stack').innerHTML = PROJECTS.map((p,i)=>`
+  <div class="card-slot" data-motion data-y="30">
+    <article class="card" data-slug="${p.slug}" tabindex="0" role="link"
+      aria-label="Open case study: ${p.title}">
+      <div class="card-top">
+        <div class="num grad-text">${p.num}</div>
+        <div class="meta"><span class="cat">${p.cat}</span><span class="title">${p.title}</span></div>
+        <span class="pill pill-ghost">View Case</span>
+      </div>
+      <div class="card-grid">
+        <div class="card-col"><img class="img-a" src="${p.card[0]}" alt="${p.title} — hero render" loading="lazy" decoding="async"><img class="img-b" src="${p.card[1]}" alt="${p.title} — detail render" loading="lazy" decoding="async"></div>
+        <div class="card-col right"><img src="${p.card[2]}" alt="${p.title} — tall render" loading="lazy" decoding="async"></div>
+      </div>
+    </article>
+  </div>`).join('');
+
+/* ---------- build: case overlay ---------- */
+const caseView = $('#caseView');
+let caseOpenSlug = null, lastFocus = null, savedScroll = 0;
+
+function buildCase(p, idx){
+  const prev = PROJECTS[(idx+PROJECTS.length-1)%PROJECTS.length];
+  const next = PROJECTS[(idx+1)%PROJECTS.length];
+  return `
+    <div class="case-bar">
+      <button class="back" id="caseBack">← Back to Work</button>
+      <span class="idx">${p.num} / 0${PROJECTS.length}</span>
+    </div>
+    <div class="case-inner">
+      <div class="case-hero"><img src="${p.images[0]}" alt="${p.title} — opening render"></div>
+      <h1 id="caseTitle" class="grad-text">${p.title}</h1>
+      <p class="lede">${p.lede}</p>
+      <dl class="case-facts">${Object.entries(p.facts).map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
+      <h3>Process</h3>
+      <div class="steps">${p.steps.map(s=>`<div class="step"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('')}</div>
+      <h3>Gallery</h3>
+      <div class="gallery">
+        <div class="col"><img src="${p.images[0]}" alt="${p.title} gallery image 1"><img src="${p.images[1]}" alt="${p.title} gallery image 2"></div>
+        <div class="col"><img src="${p.images[2]}" alt="${p.title} gallery image 3"></div>
+      </div>
+      <h3>Deliverables</h3>
+      <div class="deliver">${p.deliver.map(d=>`<span>${d}</span>`).join('')}</div>
+      <h3>Outcome</h3>
+      <p class="lede">${p.outcome}</p>
+      <div class="case-nav">
+        <button id="casePrev">← ${prev.title}</button>
+        <button id="caseNext">${next.title} →</button>
+      </div>
+      <p class="case-note">Demo case study — client, year and outcome are fictional examples.</p>
+    </div>`;
+}
+
+function openCase(slug, fromHash){
+  const idx = PROJECTS.findIndex(p=>p.slug===slug);
+  if(idx<0) return;
+  const p = PROJECTS[idx];
+  if(!caseOpenSlug){
+    savedScroll = scrollY;
+    lastFocus = document.activeElement;
+  }
+  caseOpenSlug = slug;
+  caseView.innerHTML = buildCase(p, idx);
+  caseView.hidden = false;
+  requestAnimationFrame(()=>{
+    caseView.classList.add('open');
+    $('#caseBack').focus({preventScroll:true});
+  });
+  caseView.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+  history.replaceState(null,'',`#work/${slug}`);   // shareable, back works via hashchange
+  $('#caseBack').addEventListener('click', closeCase);
+  $('#casePrev').addEventListener('click', ()=>{ location.hash = `work/${PROJECTS[(idx+PROJECTS.length-1)%PROJECTS.length].slug}`; });
+  $('#caseNext').addEventListener('click', ()=>{ location.hash = `work/${PROJECTS[(idx+1)%PROJECTS.length].slug}`; });
+}
+function closeCase(){
+  if(!caseOpenSlug) return;
+  caseOpenSlug = null;
+  caseView.classList.remove('open');
+  const done = ()=>{ caseView.hidden = true; caseView.innerHTML = ''; };
+  RM ? done() : setTimeout(done, 380);
+  document.body.style.overflow = '';
+  history.replaceState(null,'',location.pathname + location.search);
+  document.documentElement.style.scrollBehavior = 'auto';
+  scrollTo(0, savedScroll);
+  requestAnimationFrame(()=>{ document.documentElement.style.scrollBehavior = ''; });
+  if(lastFocus && lastFocus.focus) lastFocus.focus({preventScroll:true});
+}
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape' && caseOpenSlug) closeCase();
+  if(e.key==='Tab' && caseOpenSlug && caseView.classList.contains('open')){
+    const focusables = caseView.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])');
+    if(!focusables.length) return;
+    const first = focusables[0], last = focusables[focusables.length-1];
+    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+    else if(!caseView.contains(document.activeElement)){ e.preventDefault(); first.focus(); }
+  }
+});
+addEventListener('hashchange', ()=>{
+  const m = location.hash.match(/^#work\/([\w-]+)$/);
+  if(m){ if(m[1]!==caseOpenSlug) openCase(m[1], true); }
+  else if(caseOpenSlug){ caseView.classList.contains('open') && closeCase(); }
+});
+if(location.hash.startsWith('#work/')){
+  const m = location.hash.match(/^#work\/([\w-]+)$/);
+  if(m) openCase(m[1], true);
+}
+
+/* card click + keyboard */
+$('#stack').addEventListener('click', e=>{
+  const card = e.target.closest('.card');
+  if(card) openCase(card.dataset.slug);
+});
+$('#stack').addEventListener('keydown', e=>{
+  const card = e.target.closest('.card');
+  if(card && (e.key==='Enter' || e.key===' ')){ e.preventDefault(); openCase(card.dataset.slug); }
+});
+
+/* ---------- FadeIn (IntersectionObserver, once, 50px margin) ---------- */
+const io = new IntersectionObserver(entries=>{
+  for(const en of entries){
+    if(en.isIntersecting){
+      const el = en.target;
+      const d = +el.dataset.delay || 0, dur = +el.dataset.dur || 700;
+      el.style.transitionDelay = d+'ms';
+      el.style.transitionDuration = dur+'ms';
+      el.classList.add('in');
+      io.unobserve(el);
+    }
+  }
+},{rootMargin:'50px 50px 50px 50px', threshold:0});
+document.querySelectorAll('[data-motion]').forEach(el=>{
+  const x = +el.dataset.x || 0, y = +el.dataset.y || 0;
+  if(x||y) el.style.transform = `translate(${x}px, ${y}px)`;
+  io.observe(el);
+});
+
+/* ---------- magnet (hero portrait follows the cursor) ---------- */
+const magnet = $('#magnet');
+if(magnet && !RM && !NO_HOVER){
+  const PAD = 150, STRENGTH = 3;
+  let raf = null, tx = 0, ty = 0;
+  const apply = ()=>{ magnet.style.transform = `translate3d(${tx/STRENGTH}px, ${ty/STRENGTH}px, 0)`; raf = null; };
+  document.addEventListener('mousemove', e=>{
+    const r = magnet.getBoundingClientRect();
+    const cx = r.left + r.width/2, cy = r.top + r.height/2;
+    const inside = e.clientX > r.left-PAD && e.clientX < r.right+PAD && e.clientY > r.top-PAD && e.clientY < r.bottom+PAD;
+    magnet.classList.toggle('active', inside);
+    if(inside){ tx = e.clientX-cx; ty = e.clientY-cy; } else { tx = 0; ty = 0; }
+    if(!raf) raf = requestAnimationFrame(apply);
+  },{passive:true});
+}
+
+/* ---------- scroll-driven reel (two counter-moving rows) ---------- */
+const reelEl = $('#reel'), rowA = $('#reelRow1'), rowB = $('#reelRow2');
+if(!RM){
+  let ticking = false;
+  const update = ()=>{
+    ticking = false;
+    const r = reelEl.getBoundingClientRect();
+    const offset = (scrollY - (r.top + scrollY) + innerHeight) * 0.3;   // = (-r.top + innerHeight) * 0.3
+    rowA.style.transform = `translateX(${offset - 200}px)`;
+    rowB.style.transform = `translateX(${-(offset - 200)}px)`;
+  };
+  addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
+  update();
+} else {
+  rowA.style.transform = rowB.style.transform = 'translateX(-200px)';
+}
+
+/* ---------- character-by-character scroll reveal (about paragraph) ---------- */
+const aboutP = $('#aboutText');
+if(aboutP){
+  const text = aboutP.textContent;
+  if(RM){
+    /* leave as-is: fully visible */
+  } else {
+    aboutP.setAttribute('aria-label', text);
+    aboutP.innerHTML = text.split(' ').map(word =>
+      `<span class="w" aria-hidden="true" style="display:inline-block;white-space:nowrap">${[...word].map(ch => `<span class="c" style="opacity:.2">${ch}</span>`).join('')}</span>`
+    ).join(' ');
+    const spans = aboutP.querySelectorAll('span.c');
+    let ticking = false;
+    const update = ()=>{
+      ticking = false;
+      const r = aboutP.getBoundingClientRect();
+      const vh = innerHeight;
+      const startLine = vh*0.8, endLine = vh*0.2;
+      const denom = r.height + (startLine - endLine);
+      const prog = Math.min(1, Math.max(0, (startLine - r.top) / denom));
+      const lit = Math.round(prog * spans.length);
+      spans.forEach((s,i)=>{ s.style.opacity = i < lit ? 1 : 0.2; });
+    };
+    addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
+    update();
+  }
+}
+
+/* ---------- stacked cards scale-down ---------- */
+if(!RM){
+  const slots = [...document.querySelectorAll('.card-slot')];
+  const total = slots.length;
+  let ticking = false;
+  const update = ()=>{
+    ticking = false;
+    const vh = innerHeight;
+    const stickyTop = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sticky-top')) || 24;
+    slots.forEach((slot,i)=>{
+      const card = slot.firstElementChild;
+      const r = slot.getBoundingClientRect();
+      const cr = card.getBoundingClientRect();
+      const travel = Math.max(1, r.height - cr.height - stickyTop);
+      const p = Math.min(1, Math.max(0, (stickyTop - r.top) / travel));
+      const target = 1 - (total - 1 - i) * 0.03;
+      card.style.transform = `scale(${1 - (1-target)*p})`;
+    });
+  };
+  addEventListener('scroll', ()=>{ if(!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
+  addEventListener('resize', update);
+  update();
+}
+</script>
+</body>
+</html>

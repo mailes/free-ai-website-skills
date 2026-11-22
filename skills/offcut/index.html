@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offcut Studio — know the price before you write the brief</title>
+<meta name="description" content="Offcut Studio is a fictional freelance web studio demo with a working project estimator — configure scope, see the live price against agency and freelancer baselines. No build, no backend.">
+<style>
+@font-face{font-family:'Inter';font-weight:400;font-display:swap;src:url('assets/fonts/inter-400.ttf') format('truetype')}
+@font-face{font-family:'Inter';font-weight:500;font-display:swap;src:url('assets/fonts/inter-500.ttf') format('truetype')}
+@font-face{font-family:'Inter';font-weight:600;font-display:swap;src:url('assets/fonts/inter-600.ttf') format('truetype')}
+@font-face{font-family:'Inter';font-weight:700;font-display:swap;src:url('assets/fonts/inter-700.ttf') format('truetype')}
+:root{--bg:#0D0D0D;--panel:#161616;--ink:#fafafa;--muted:#a3a3a3;--line:#1E1E1E;--acc:#FF5656;--muted2:rgba(255,255,255,.5)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;overflow-x:clip;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font-family:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:6px}
+.mono{font-family:ui-monospace,'SF Mono',Menlo,monospace;letter-spacing:.18em;text-transform:uppercase;font-size:.72rem;color:var(--muted)}
+.js [data-motion]{opacity:0;transform:translateY(20px);transition:opacity .6s ease-out,transform .6s ease-out}
+.js [data-motion].in{opacity:1;transform:none}
+html.reduced [data-motion]{opacity:1!important;transform:none!important;transition:none!important}
+
+/* nav */
+.nav{max-width:76rem;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1.3rem 1.25rem}
+.brand{font-weight:700;letter-spacing:-.01em;text-decoration:none;font-size:1.05rem;flex:none}
+.brand i{font-style:normal;color:var(--acc)}
+.nav .menu{display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:flex-end}
+.nav .menu a{text-decoration:none;color:var(--muted);font-size:.88rem;transition:color .2s ease}
+.nav .menu a:hover{color:var(--ink)}
+@media(max-width:520px){.nav .menu{gap:.95rem}.nav .menu a{font-size:.8rem}}
+
+/* ambient top glow */
+.intro{position:relative;max-width:76rem;margin:0 auto;padding:3.2rem 1.25rem 2.3rem;text-align:center}
+.intro::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:min(760px,92vw);height:320px;background:radial-gradient(ellipse at center,rgba(255,86,86,.12),rgba(244,114,182,.04) 45%,transparent 72%);pointer-events:none;z-index:-1}
+.intro h1{font-weight:500;font-size:2.35rem;letter-spacing:-.025em;line-height:1.12;max-width:26ch;margin:1rem auto .9rem}
+@media(min-width:768px){.intro h1{font-size:3.25rem}}
+.intro p{color:var(--muted);max-width:42rem;margin:0 auto;line-height:1.65;font-size:.98rem}
+
+/* calculator (spec) */
+.calc-wrap{max-width:80rem;margin:0 auto;padding:0 1rem 4rem}
+@media(min-width:768px){.calc-wrap{padding:0 2rem 5rem}}
+.calc-head{text-align:center;padding-bottom:2rem}
+.calc{display:grid;grid-template-columns:1fr;border-radius:1rem;overflow:hidden;border:1px solid rgba(255,255,255,.1);box-shadow:0 24px 64px rgba(0,0,0,.45)}
+@media(min-width:1024px){.calc{grid-template-columns:1fr 1fr}}
+.form-col{background:#0D0D0D;padding:1.8rem 1.25rem}
+@media(min-width:768px){.form-col{padding:2.4rem 2.6rem}}
+.fsec{padding:1.45rem 0;border-bottom:1px solid var(--line)}
+.fsec:first-child{padding-top:.2rem}
+.fsec:last-child{border-bottom:none;padding-bottom:.4rem}
+.fsec h3{font-weight:500;font-size:1rem;margin-bottom:1rem}
+.fsec h3 em{font-style:normal;color:var(--acc)}
+/* radios */
+.opt{display:flex;align-items:center;gap:.8rem;padding:.55rem .45rem;margin:0 -.45rem;border-radius:8px;cursor:pointer;transition:background .18s ease}
+.opt:hover{background:rgba(255,255,255,.03)}
+.opt input{position:absolute;opacity:0;width:0}
+.opt .ring{width:20px;height:20px;border-radius:50%;border:2px solid #3a3a3a;flex:none;display:flex;align-items:center;justify-content:center;transition:border-color .2s ease}
+.opt .ring::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--acc);transform:scale(0);transition:transform .18s ease}
+.opt input:checked + .ring{border-color:var(--acc)}
+.opt input:checked + .ring::after{transform:scale(1)}
+.opt input:focus-visible + .ring{outline:2px solid var(--acc);outline-offset:3px}
+.opt span.txt{font-size:.95rem;color:#d4d4d4}
+/* slider */
+.slider-row{display:flex;align-items:center;gap:1rem}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:4px;border-radius:4px;background:linear-gradient(to right,var(--acc) 0%,var(--acc) var(--fill,20%),#2c2c2c var(--fill,20%));outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--acc);border:2px solid #0D0D0D;box-shadow:0 0 0 1px var(--acc);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--acc);border:2px solid #0D0D0D;cursor:pointer}
+.slider-val{font-weight:700;font-size:1.5rem;color:var(--acc);min-width:2.6ch;text-align:right;font-variant-numeric:tabular-nums}
+.slider-ends{display:flex;justify-content:space-between;color:var(--muted);font-size:.75rem;margin-top:.5rem}
+/* checkboxes */
+.chk{display:flex;align-items:center;gap:.8rem;padding:.55rem .45rem;margin:0 -.45rem;border-radius:8px;cursor:pointer;transition:background .18s ease}
+.chk:hover{background:rgba(255,255,255,.03)}
+.chk input{position:absolute;opacity:0;width:0}
+.chk .box{width:20px;height:20px;border-radius:5px;border:2px solid #3a3a3a;flex:none;display:flex;align-items:center;justify-content:center;transition:border-color .2s ease,background .2s ease}
+.chk .box svg{width:12px;height:12px;stroke:#fff;opacity:0;transition:opacity .15s ease}
+.chk input:checked + .box{border-color:var(--acc);background:var(--acc)}
+.chk input:checked + .box svg{opacity:1}
+.chk input:focus-visible + .box{outline:2px solid var(--acc);outline-offset:3px}
+.chk .txt{font-size:.95rem;color:#d4d4d4;flex:1}
+.chk .price{color:var(--acc);font-weight:600;font-size:.9rem;font-variant-numeric:tabular-nums}
+/* estimate column */
+.est-col{padding:1.8rem 1.25rem;background:#111;border-top:1px solid rgba(255,255,255,.06)}
+@media(min-width:768px){.est-col{padding:2.4rem 2.6rem}}
+@media(min-width:1024px){.est-col{border-top:none;border-left:1px solid rgba(255,255,255,.08)}}
+.est-col h3{font-weight:600;font-size:1.15rem}
+.est-col .sub{color:var(--muted);font-size:.88rem;line-height:1.6;margin:.6rem 0 1.5rem}
+.ecard{border-radius:1rem;padding:1.35rem 1.5rem;margin-bottom:1rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.05)}
+.ecard .t{font-weight:500;font-size:.9rem;color:#d4d4d4}
+.ecard .p{font-weight:700;font-size:2.05rem;font-variant-numeric:tabular-nums;margin:.35rem 0 .2rem}
+.ecard .s{color:var(--muted);font-size:.82rem}
+.ecard.you{background:linear-gradient(90deg,#f472b6,#fb923c);color:#fff;border-color:transparent;box-shadow:0 12px 32px rgba(244,114,182,.2)}
+.ecard.you .t{color:#fff;display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap}
+.ecard.you .save-pill{background:rgba(13,13,13,.22);border-radius:999px;padding:.2rem .65rem;font-size:.74rem;font-weight:600;font-variant-numeric:tabular-nums}
+.ecard.you .p{font-size:2.65rem}
+.ecard.you .s{color:rgba(255,255,255,.9)}
+.ecard.you .bd{margin-top:.55rem;padding-top:.55rem;border-top:1px solid rgba(255,255,255,.22);font-size:.76rem;color:rgba(255,255,255,.9);font-variant-numeric:tabular-nums}
+.est-note{font-size:.74rem;color:var(--muted);margin-top:1.1rem;line-height:1.6}
+.sendrow{margin-top:1.5rem;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap}
+.btn-acc{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:.85rem 1.65rem;font-weight:600;font-size:.92rem;cursor:pointer;transition:transform .2s ease,filter .2s ease}
+.btn-acc:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:.82rem 1.2rem;font-weight:500;font-size:.86rem;cursor:pointer;transition:color .2s ease,border-color .2s ease}
+.btn-ghost:hover{color:var(--ink);border-color:rgba(255,255,255,.32)}
+.demo-note{display:none;font-size:.82rem;color:var(--muted);line-height:1.6;margin-top:.85rem;padding:.75rem .95rem;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.demo-note.show{display:block}
+.demo-note b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* original sections */
+.sect{max-width:72rem;margin:0 auto;padding:4.5rem 1.25rem}
+@media(min-width:768px){.sect{padding:5.5rem 2rem}}
+.sect h2{font-weight:500;font-size:1.9rem;letter-spacing:-.01em;margin:.7rem 0 2rem}
+@media(min-width:768px){.sect h2{font-size:2.4rem}}
+.steps{display:grid;gap:1.4rem;grid-template-columns:1fr}
+@media(min-width:768px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1.5rem}
+.step .n{font-weight:700;color:var(--acc);font-size:.85rem}
+.step b{display:block;font-weight:600;margin:.6rem 0 .4rem}
+.step p{color:var(--muted);font-size:.9rem;line-height:1.65}
+.gets{display:grid;gap:1rem;grid-template-columns:1fr}
+@media(min-width:640px){.gets{grid-template-columns:repeat(2,1fr)}}
+.get{display:flex;gap:.8rem;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1.1rem 1.2rem}
+.get svg{width:18px;height:18px;stroke:var(--acc);flex:none;margin-top:.15rem}
+.get span{color:#d4d4d4;font-size:.92rem;line-height:1.55}
+.faq{max-width:52rem;margin:2rem auto 0}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;padding:1.15rem .2rem;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:1rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';color:var(--acc);font-size:1.15rem}
+.faq details[open] summary::after{content:'–'}
+.faq .a{color:var(--muted);line-height:1.7;font-size:.93rem;padding:0 .2rem 1.15rem}
+.contact{text-align:center}
+.contact .btn-acc{margin-top:1.6rem}
+.contact .mail{display:inline-block;margin-left:.6rem;color:var(--muted);font-size:.9rem;text-decoration:none}
+.contact .mail:hover{color:var(--ink)}
+footer{padding:2.2rem 1.25rem;max-width:76rem;margin:0 auto;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+footer .fine{color:var(--muted);font-size:.75rem;line-height:1.6;max-width:46rem}
+footer nav{display:flex;gap:1.3rem}
+footer nav a{color:var(--muted);font-size:.75rem;text-decoration:none}
+footer nav a:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js');
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('reduced');</script>
+
+<nav class="nav" aria-label="Main">
+  <a class="brand" href="#top">Offcut<i>.</i></a>
+  <div class="menu">
+    <a href="#calculator">Estimator</a><a href="#process">Process</a><a href="#faq">FAQ</a><a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<header class="intro" id="top">
+  <p class="mono" data-motion>Offcut Studio — freelance web, no mystery fees</p>
+  <h1 data-motion data-delay="80">Know the price before you write the brief.</h1>
+  <p data-motion data-delay="160">Configure the project below and the estimate updates live — the same math we use in real quotes. No calls needed to learn the ballpark.</p>
+</header>
+
+<section class="calc-wrap" id="calculator">
+  <div class="calc-head">
+    <p class="mono" data-motion>Try the project estimation calculator</p>
+    <h2 data-motion data-delay="80" style="font-weight:500;font-size:1.9rem;margin-top:.8rem">Get a real website within your budget.</h2>
+  </div>
+  <div class="calc" data-motion>
+    <div class="form-col">
+      <div class="fsec">
+        <h3>What kind of service do you need?</h3>
+        <label class="opt"><input type="radio" name="svc" value="design"><span class="ring"></span><span class="txt">Only Design</span></label>
+        <label class="opt"><input type="radio" name="svc" value="development"><span class="ring"></span><span class="txt">Only Development</span></label>
+        <label class="opt"><input type="radio" name="svc" value="both" checked><span class="ring"></span><span class="txt">Design + Development</span></label>
+      </div>
+      <div class="fsec">
+        <h3>How many pages? <em id="pagesVal">5</em></h3>
+        <div class="slider-row">
+          <input type="range" id="pages" min="1" max="30" step="1" value="5" aria-label="Number of pages">
+          <span class="slider-val" id="pagesVal2" aria-hidden="true">5</span>
+        </div>
+        <div class="slider-ends"><span>1</span><span>30</span></div>
+      </div>
+      <div class="fsec">
+        <h3>Add-ons</h3>
+        <label class="chk"><input type="checkbox" id="content"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg></span><span class="txt">I will need help with content</span><span class="price">+$50/page</span></label>
+        <label class="chk"><input type="checkbox" id="seo"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg></span><span class="txt">I want to optimize my website for SEO</span><span class="price">+$50/page</span></label>
+      </div>
+      <div class="fsec">
+        <h3>How fast do you need this?</h3>
+        <label class="opt"><input type="radio" name="tl" value="rush"><span class="ring"></span><span class="txt">Within 7 Days</span><span style="flex:1"></span><span class="price" style="color:var(--acc);font-weight:600">+$100/page</span></label>
+        <label class="opt"><input type="radio" name="tl" value="fast"><span class="ring"></span><span class="txt">Within 14 Days</span><span style="flex:1"></span><span class="price" style="color:var(--acc);font-weight:600">+$25/page</span></label>
+        <label class="opt"><input type="radio" name="tl" value="regular" checked><span class="ring"></span><span class="txt">Regular Speed (based on discussion)</span><span style="flex:1"></span><span class="price" style="color:var(--muted)">no extra</span></label>
+      </div>
+    </div>
+    <div class="est-col">
+      <h3>Estimated cost</h3>
+      <p class="sub">Live numbers from the same math our real quotes use — agency and freelancer baselines shown for honesty, not as scare tactics.</p>
+      <div class="ecard">
+        <div class="t">Typical agency charges, minimum</div>
+        <div class="p" id="agency">$12,000</div>
+        <div class="s">+ too much extra time &amp; additional cost</div>
+      </div>
+      <div class="ecard">
+        <div class="t">Regular freelancer charges, minimum</div>
+        <div class="p" id="freelancer">$5,000</div>
+        <div class="s">+ too much headache &amp; back-and-forth</div>
+      </div>
+      <div class="ecard you">
+        <div class="t"><span>With Offcut Studio</span><span class="save-pill" id="savePill">Save $10,701 vs agency</span></div>
+        <div class="p" id="yours">$1,299</div>
+        <div class="s">Save money, time &amp; headache.</div>
+        <div class="bd" id="breakdown">Base $499 + 4 extra pages $800</div>
+      </div>
+      <div class="sendrow">
+        <button class="btn-acc" id="sendBtn" type="button">Send this estimate</button>
+        <button class="btn-ghost" id="resetBtn" type="button">Reset defaults</button>
+      </div>
+      <p class="demo-note" id="sendNote">Demo page — nothing was sent. Your estimate (<b id="sendEcho">$1,299</b> for <b id="sendEcho2">5 pages, design + development</b>) is the number a real inquiry would carry.</p>
+      <p class="est-note">Estimates are fictional example pricing for this template and are not a binding offer.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sect" id="included">
+  <p class="mono" data-motion>What you get</p>
+  <h2 data-motion>Built to launch, easy to own.</h2>
+  <div class="gets">
+    <div class="get" data-motion><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span><b>Clean, editable source files</b> — zero lock-in, zero monthly builder tax, ready for any static host.</span></div>
+    <div class="get" data-motion data-delay="80"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span><b>Responsive across desktop &amp; mobile</b> — tested down to 390px with keyboard navigation and reduced-motion support.</span></div>
+    <div class="get" data-motion data-delay="160"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span><b>Transparent line-item pricing</b> — every extra page, content sprint and timeline multiplier is visible up front.</span></div>
+    <div class="get" data-motion data-delay="240"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span><b>Direct handoff guide</b> — clear notes showing where copy, rates and brand tokens live so updates take minutes.</span></div>
+  </div>
+</section>
+
+<section class="sect" id="process">
+  <p class="mono" data-motion>Process</p>
+  <h2 data-motion>What happens after the estimate.</h2>
+  <div class="steps">
+    <div class="step" data-motion><span class="n">01</span><b>Scope lock</b><p>We turn the estimate into a one-page scope: pages, sections, who writes what, and the delivery date. Half up front, half on delivery.</p></div>
+    <div class="step" data-motion data-delay="100"><span class="n">02</span><b>Design in the open</b><p>You see the first screens within days, not weeks — feedback happens on real pages, in comments, not in meetings.</p></div>
+    <div class="step" data-motion data-delay="200"><span class="n">03</span><b>Ship &amp; hand over</b><p>Static, fast, yours: the site deploys and the files are handed over with an editing guide. No retainers required.</p></div>
+  </div>
+</section>
+
+<section class="sect" id="faq">
+  <p class="mono" data-motion>FAQ</p>
+  <h2 data-motion>Before you ask.</h2>
+  <div class="faq" data-motion>
+    <details><summary>Is the estimate binding?</summary><div class="a">It is the same math we quote with, but a binding quote follows a ten-minute scoping call — edge cases (e-commerce, multilingual, custom illustration) move the number and we say so first.</div></details>
+    <details><summary>Why is the slider capped at 30 pages?</summary><div class="a">Because larger projects stop being page-counts and become scope conversations. If you need more, write to us with a rough structure and we will estimate it properly.</div></details>
+    <details><summary>What counts as a page?</summary><div class="a">A distinct layout with its own content. Five product variants that share one layout count as one page plus a data change.</div></details>
+    <details><summary>Do you take rush jobs?</summary><div class="a">Sometimes, if the calendar allows — the +$100/page is real and it buys you a dedicated week, not overtime sweat.</div></details>
+  </div>
+</section>
+
+<section class="sect contact" id="contact">
+  <p class="mono" data-motion>Contact</p>
+  <h2 data-motion>Or just write to the studio.</h2>
+  <p data-motion class="sub" style="margin:0 auto">One paragraph about the project is enough — we answer with questions, then a number.</p>
+  <button class="btn-acc" id="mailBtn" data-motion>Open the estimate</button>
+  <a class="mail" href="mailto:hello@offcut.example">hello@offcut.example</a>
+</section>
+
+<footer>
+  <p class="fine">© 2026 Offcut Studio. All rights reserved. Fictional demo — prices are example figures from a template calculator, not a real offer.</p>
+  <nav aria-label="Footer">
+    <a href="#calculator">Estimator</a><a href="#process">Process</a><a href="#faq">FAQ</a><a href="mailto:hello@offcut.example">Contact</a>
+  </nav>
+</footer>
+
+<script>
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = s => document.querySelector(s);
+
+/* fadeUp */
+const io = new IntersectionObserver(entries => {
+  for (const en of entries) if (en.isIntersecting) {
+    const el = en.target, d = +el.dataset.delay || 0;
+    el.style.transitionDelay = d + 'ms';
+    el.classList.add('in');
+    io.unobserve(el);
+  }
+}, { rootMargin: '0px 0px -40px 0px', threshold: 0 });
+document.querySelectorAll('[data-motion]').forEach(el => {
+  if (el.getBoundingClientRect().top < window.innerHeight * 0.92) {
+    const d = +el.dataset.delay || 0;
+    el.style.transitionDelay = d + 'ms';
+    requestAnimationFrame(() => el.classList.add('in'));
+  } else {
+    io.observe(el);
+  }
+});
+
+/* calculator — pricing logic verbatim from the reference spec */
+const SVC = { design: {base:399, per:100}, development: {base:199, per:100}, both: {base:499, per:200} };
+const fmt = n => '$' + n.toLocaleString('en-US');
+const state = { svc:'both', pages:5, content:false, seo:false, tl:'regular' };
+
+function calc() {
+  const s = SVC[state.svc];
+  const extraPages = Math.max(0, state.pages - 1) * s.per;
+  const contentCost = state.content ? state.pages * 50 : 0;
+  const seoCost = state.seo ? state.pages * 50 : 0;
+  const rushCost = state.tl === 'rush' ? state.pages * 100 : state.tl === 'fast' ? state.pages * 25 : 0;
+  const total = Math.max(s.base, s.base + extraPages) + contentCost + seoCost + rushCost;
+  const per = state.svc === 'both' ? 1000 : 400;
+  const agency = 8000 + (state.pages - 1) * per;
+  const fper = state.svc === 'both' ? 500 : 200;
+  const freelancer = 3000 + (state.pages - 1) * fper;
+  return { total, agency, freelancer, base: s.base, extraPages, contentCost, seoCost, rushCost };
+}
+const tweens = {};
+function render(animate) {
+  const { total, agency, freelancer, base, extraPages, contentCost, seoCost, rushCost } = calc();
+  const set = (id, val) => {
+    const el = $(id);
+    if (tweens[id]) cancelAnimationFrame(tweens[id]);
+    el.dataset.v = val;
+    if (!animate || RM) { el.textContent = fmt(val); return; }
+    const from = parseInt((el.textContent || '').replace(/[^0-9]/g, ''), 10) || 0;
+    const t0 = performance.now();
+    const step = now => {
+      const k = Math.min(1, (now - t0) / 400);
+      el.textContent = fmt(Math.round(from + (val - from) * k));
+      if (k < 1) tweens[id] = requestAnimationFrame(step);
+    };
+    tweens[id] = requestAnimationFrame(step);
+  };
+  set('#agency', agency); set('#freelancer', freelancer); set('#yours', total);
+  const save = Math.max(0, agency - total);
+  $('#savePill').textContent = `Save ${fmt(save)} vs agency`;
+  const parts = [`Base ${fmt(base)}`];
+  if (extraPages) parts.push(`${state.pages - 1} extra ${state.pages - 1 === 1 ? 'page' : 'pages'} ${fmt(extraPages)}`);
+  if (contentCost) parts.push(`Content ${fmt(contentCost)}`);
+  if (seoCost) parts.push(`SEO ${fmt(seoCost)}`);
+  if (rushCost) parts.push(`${state.tl === 'rush' ? '7-day rush' : '14-day fast'} ${fmt(rushCost)}`);
+  $('#breakdown').textContent = parts.join(' · ');
+  const scope = `${state.pages} ${state.pages === 1 ? 'page' : 'pages'}, ${state.svc === 'both' ? 'design + development' : state.svc === 'design' ? 'design only' : 'development only'}`;
+  $('#sendEcho').textContent = fmt(total);
+  $('#sendEcho2').textContent = scope;
+}
+document.querySelectorAll('input[name="svc"]').forEach(r => r.addEventListener('change', () => { state.svc = r.value; render(true); }));
+document.querySelectorAll('input[name="tl"]').forEach(r => r.addEventListener('change', () => { state.tl = r.value; render(true); }));
+$('#content').addEventListener('change', e => { state.content = e.target.checked; render(true); });
+$('#seo').addEventListener('change', e => { state.seo = e.target.checked; render(true); });
+const pages = $('#pages');
+function paintSlider() {
+  const k = (pages.value - 1) / 29 * 100;
+  pages.style.setProperty('--fill', k + '%');
+  $('#pagesVal').textContent = pages.value;
+  $('#pagesVal2').textContent = pages.value;
+}
+pages.addEventListener('input', () => { state.pages = +pages.value; paintSlider(); render(false); });
+paintSlider(); render(false);
+
+/* reset defaults */
+$('#resetBtn').addEventListener('click', () => {
+  state.svc = 'both'; state.pages = 5; state.content = false; state.seo = false; state.tl = 'regular';
+  document.querySelector('input[name="svc"][value="both"]').checked = true;
+  document.querySelector('input[name="tl"][value="regular"]').checked = true;
+  $('#content').checked = false; $('#seo').checked = false;
+  pages.value = '5'; paintSlider();
+  $('#sendNote').classList.remove('show');
+  render(true);
+});
+
+/* honest send */
+$('#sendBtn').addEventListener('click', () => { $('#sendNote').classList.add('show'); render(false); });
+$('#mailBtn').addEventListener('click', () => {
+  render(false);
+  $('#sendNote').classList.add('show');
+  $('#sendNote').scrollIntoView({ block: 'nearest' });
+});
+</script>
+</body>
+</html>

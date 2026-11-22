@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APOGEE — Orbital &amp; Launch Propulsion Engineering</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23111414'/%3E%3Cpath d='M16 6L24 25H19.5L16 16.5L12.5 25H8L16 6Z' fill='%237191D0'/%3E%3C/svg%3E" />
+  <meta name="description" content="Apogee Propulsion Systems engineers custom methalox boosters, vacuum upper-stage engines, and orbital thrusters for commercial and institutional space programs." />
+  <style>
+    @font-face {
+      font-family: 'Plus Jakarta Sans';
+      src: url('./assets/fonts/jakarta-variable.ttf') format('truetype');
+      font-weight: 400 800;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('./assets/fonts/inter-400.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('./assets/fonts/inter-500.ttf') format('truetype');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('./assets/fonts/inter-600.ttf') format('truetype');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('./assets/fonts/inter-700.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg-titanium: #F3F4F6;
+      --bg-white: #FFFFFF;
+      --bg-carbon: #111414;
+      --bg-carbon-soft: #1B2021;
+      --ink-carbon: #111414;
+      --ink-slate: #555E61;
+      --ink-light: #F3F4F6;
+      --accent-cobalt: #4E76C2;
+      --accent-sky: #7191D0;
+      --border-hair: rgba(17, 20, 20, 0.12);
+      --border-dark: rgba(243, 244, 246, 0.14);
+      --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg-titanium);
+      color: var(--ink-carbon);
+      font-family: var(--font-ui);
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg-titanium);
+      color: var(--ink-carbon);
+      overflow-x: hidden;
+      line-height: 1.55;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+
+    :focus-visible {
+      outline: 2px solid var(--accent-cobalt);
+      outline-offset: 3px;
+    }
+
+    section[id] { scroll-margin-top: 76px; }
+
+    /* Sticky Swiss Header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(243, 244, 246, 0.90);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-hair);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    @media (min-width: 768px) { .site-header { padding: 16px 48px; } }
+    @media (min-width: 1024px) { .site-header { padding: 16px 60px; } }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 0.14em;
+    }
+
+    .desktop-nav {
+      display: none;
+      align-items: center;
+      gap: 30px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-slate);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    @media (min-width: 960px) { .desktop-nav { display: flex; } }
+    .desktop-nav a:hover { color: var(--ink-carbon); }
+
+    .btn-carbon {
+      background: var(--bg-carbon);
+      color: var(--ink-light);
+      border: 1px solid var(--bg-carbon);
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: opacity 0.2s ease;
+    }
+    .btn-carbon:hover { opacity: 0.86; }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--ink-carbon);
+      border: 1px solid rgba(17, 20, 20, 0.28);
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .mobile-menu-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      border: 1px solid var(--border-hair);
+      background: var(--bg-white);
+    }
+    @media (min-width: 960px) { .mobile-menu-btn { display: none; } }
+
+    .mobile-drawer {
+      position: fixed;
+      top: 72px;
+      left: 16px;
+      right: 16px;
+      background: var(--bg-white);
+      border: 1px solid var(--border-hair);
+      border-radius: 12px;
+      padding: 20px;
+      z-index: 60;
+      box-shadow: 0 20px 50px -16px rgba(17, 20, 20, 0.25);
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+    .mobile-drawer.is-open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .mobile-drawer nav {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    /* Section 1: Architectural Hero */
+    .hero-section {
+      padding: 36px 24px 64px;
+    }
+    @media (min-width: 768px) { .hero-section { padding: 44px 48px 76px; } }
+    @media (min-width: 1024px) { .hero-section { padding: 48px 60px 84px; } }
+
+    .hero-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .hero-top-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+    @media (min-width: 960px) {
+      .hero-top-grid { grid-template-columns: 1.35fr 0.65fr; }
+    }
+
+    .mono-tag {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-cobalt);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .mono-tag::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      background: var(--accent-cobalt);
+      border-radius: 1px;
+    }
+
+    .hero-h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2.45rem, 5.2vw, 4.45rem);
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+    }
+
+    .hero-aside {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .hero-aside p {
+      margin: 0;
+      font-size: 15.5px;
+      color: var(--ink-slate);
+    }
+    .hero-cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .hero-video-frame {
+      position: relative;
+      border-radius: 26px;
+      overflow: hidden;
+      background: var(--bg-carbon);
+      aspect-ratio: 16 / 8.4;
+      border: 1px solid var(--border-hair);
+      transition: border-radius 0.15s linear;
+    }
+    @media (max-width: 640px) {
+      .hero-video-frame { aspect-ratio: 4 / 3; }
+    }
+    .hero-video-frame video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .hero-telemetry-bar {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      padding: 12px 18px;
+      border-radius: 10px;
+      background: rgba(17, 20, 20, 0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--ink-light);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    /* Shared Band */
+    .band {
+      padding: 80px 24px;
+      border-top: 1px solid var(--border-hair);
+    }
+    @media (min-width: 768px) { .band { padding: 92px 48px; } }
+    @media (min-width: 1024px) { .band { padding: 100px 60px; } }
+
+    .band-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .section-h2 {
+      margin: 0 0 12px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2rem, 3.8vw, 3.2rem);
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+    }
+
+    /* Section 2: Interactive Engine & Mission Configurator */
+    .config-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 36px;
+    }
+    @media (min-width: 1024px) {
+      .config-grid { grid-template-columns: 1.05fr 0.95fr; }
+    }
+
+    .spec-panel {
+      background: var(--bg-white);
+      border: 1px solid var(--border-hair);
+      border-radius: 16px;
+      padding: 26px;
+    }
+    @media (min-width: 768px) { .spec-panel { padding: 32px; } }
+
+    .engine-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 520px) { .engine-tabs { grid-template-columns: 1fr; } }
+
+    .engine-tab {
+      text-align: left;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-hair);
+      background: var(--bg-titanium);
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .engine-tab[aria-selected="true"] {
+      background: var(--bg-carbon);
+      color: var(--ink-light);
+      border-color: var(--bg-carbon);
+    }
+    .engine-tab-code {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--accent-cobalt);
+      margin-bottom: 2px;
+    }
+    .engine-tab[aria-selected="true"] .engine-tab-code { color: var(--accent-sky); }
+    .engine-tab-name { font-weight: 700; font-size: 14px; }
+
+    .orbit-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 22px;
+    }
+    .orbit-pill {
+      padding: 8px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border-hair);
+      background: var(--bg-titanium);
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+    .orbit-pill[aria-pressed="true"] {
+      background: var(--accent-cobalt);
+      color: #FFFFFF;
+      border-color: var(--accent-cobalt);
+    }
+
+    .slider-block {
+      padding: 18px;
+      border-radius: 12px;
+      background: var(--bg-titanium);
+      border: 1px solid var(--border-hair);
+      margin-bottom: 18px;
+    }
+    .slider-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+    .slider-block input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent-cobalt);
+    }
+
+    .telemetry-readout {
+      background: var(--bg-carbon);
+      color: var(--ink-light);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .readout-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .readout-cell {
+      padding: 16px;
+      border-radius: 10px;
+      background: var(--bg-carbon-soft);
+      border: 1px solid var(--border-dark);
+    }
+    .readout-k {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #9AA6AC;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    .readout-v {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .margin-bar-track {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .margin-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4E76C2, #7191D0);
+      transition: width 0.25s ease;
+    }
+
+    /* Section 3: Manufacturing Capabilities Accordion (M3) */
+    .cap-list {
+      margin-top: 32px;
+      border-top: 1px solid var(--border-hair);
+    }
+    .cap-item {
+      border-bottom: 1px solid var(--border-hair);
+    }
+    .cap-trigger {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 22px 0;
+      display: grid;
+      grid-template-columns: 56px 1fr 28px;
+      align-items: center;
+      text-align: left;
+      gap: 12px;
+    }
+    .cap-num { font-family: var(--font-mono); font-size: 13px; color: var(--accent-cobalt); font-weight: 600; }
+    .cap-title { font-family: var(--font-display); font-size: 21px; font-weight: 600; }
+    .cap-plus {
+      font-family: var(--font-mono);
+      font-size: 22px;
+      text-align: center;
+      transition: transform 0.25s ease;
+    }
+    .cap-trigger[aria-expanded="true"] .cap-plus { transform: rotate(45deg); }
+    .cap-panel {
+      display: none;
+      padding: 0 0 24px 68px;
+      color: var(--ink-slate);
+      font-size: 15px;
+    }
+    @media (max-width: 640px) { .cap-panel { padding-left: 0; } }
+    .cap-panel.is-open { display: block; }
+    .cap-spec-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .spec-chip {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      background: var(--bg-white);
+      border: 1px solid var(--border-hair);
+      color: var(--ink-carbon);
+    }
+
+    /* Section 4: Dark Carbon Telemetry & Test Stand Videos */
+    .carbon-band {
+      background: var(--bg-carbon);
+      color: var(--ink-light);
+      border-top: 1px solid var(--border-dark);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 32px 0 48px;
+    }
+    @media (min-width: 900px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+    .stat-card {
+      padding: 24px;
+      border-radius: 12px;
+      background: var(--bg-carbon-soft);
+      border: 1px solid var(--border-dark);
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(2.1rem, 3.6vw, 3rem);
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-label { font-size: 13.5px; color: #9AA6AC; }
+
+    .stand-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 900px) { .stand-grid { grid-template-columns: repeat(2, 1fr); } }
+    .stand-card {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border-dark);
+      background: var(--bg-carbon-soft);
+    }
+    .stand-card video {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      display: block;
+    }
+    .stand-meta {
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Section 5: Honest Mission RFQ Contact */
+    .rfq-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      margin-top: 28px;
+    }
+    @media (min-width: 960px) { .rfq-grid { grid-template-columns: 0.9fr 1.1fr; } }
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    @media (min-width: 640px) { .field-row.two { grid-template-columns: 1fr 1fr; } }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-slate);
+      margin-bottom: 6px;
+    }
+    .field input, .field textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-hair);
+      background: var(--bg-white);
+    }
+    .rfq-receipt {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: rgba(78, 118, 194, 0.12);
+      border: 1px solid rgba(78, 118, 194, 0.35);
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      display: none;
+    }
+    .rfq-receipt.is-visible { display: block; }
+
+    /* Footer */
+    .site-footer {
+      border-top: 1px solid var(--border-hair);
+      padding: 36px 24px 44px;
+      font-size: 13px;
+      color: var(--ink-slate);
+    }
+    @media (min-width: 768px) { .site-footer { padding: 40px 48px; } }
+    @media (min-width: 1024px) { .site-footer { padding: 40px 60px; } }
+    .footer-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .hero-video-frame, .margin-bar-fill { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="#heroScroll" class="brand-mark">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect width="24" height="24" rx="4" fill="#111414"/>
+        <path d="M12 4.5L18.5 19H15L12 12.2L9 19H5.5L12 4.5Z" fill="#7191D0"/>
+      </svg>
+      <span>APOGEE</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="#technology">Propulsion</a>
+      <a href="#solutions">Manufacturing</a>
+      <a href="#our-edge">Test Stands</a>
+      <a href="#contact">Mission RFQ</a>
+    </nav>
+
+    <div style="display:flex;align-items:center;gap:10px;">
+      <a href="#contact" class="btn-carbon" style="display:none;" id="headerRfqBtn">Request Spec</a>
+      <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="8" x2="20" y2="8"/><line x1="4" y1="16" x2="20" y2="16"/></svg>
+      </button>
+    </div>
+  </header>
+  <style>@media(min-width:960px){#headerRfqBtn{display:inline-flex!important;}}</style>
+
+  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+    <nav aria-label="Mobile navigation">
+      <a href="#technology">Propulsion Configurator</a>
+      <a href="#solutions">Manufacturing</a>
+      <a href="#our-edge">Test Stands</a>
+      <a href="#contact">Mission RFQ</a>
+    </nav>
+  </div>
+
+  <!-- Section 1: Architectural Hero -->
+  <section class="hero-section" id="heroScroll" aria-labelledby="hero-title">
+    <div class="hero-inner">
+      <div class="hero-top-grid">
+        <div>
+          <span class="mono-tag">Flight-qualified methalox &amp; orbital propulsion</span>
+          <h1 class="hero-h1" id="hero-title">Custom propulsion engineered for orbital cadence.</h1>
+        </div>
+        <div class="hero-aside">
+          <p>Apogee designs, prints, and hot-fire qualifies full-flow booster engines and vacuum upper stages for dedicated launch vehicles.</p>
+          <div class="hero-cta-row">
+            <a href="#technology" class="btn-carbon">Configure mission</a>
+            <a href="#contact" class="btn-outline">Mission RFQ</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-video-frame" id="heroFrame">
+        <video autoplay loop muted playsinline preload="auto" aria-hidden="true">
+          <source src="./assets/video/hero-launch.mp4" type="video/mp4" />
+        </video>
+        <div class="hero-telemetry-bar">
+          <span>STAND_04 · FULL-DURATION HOT FIRE</span>
+          <span>THRUST 420 kN · ISP 368 s · LOX/LCH4</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Interactive Engine & Mission Configurator -->
+  <section class="band" id="technology" aria-labelledby="techTitle">
+    <div class="band-inner">
+      <span class="mono-tag">Interactive mission sizing</span>
+      <h2 class="section-h2" id="techTitle">Propulsion &amp; orbit configurator</h2>
+      <p style="margin:0;color:var(--ink-slate);max-width:600px;">Select an Apogee engine family, target orbit, and payload mass to estimate burn duration, propellant requirement, and Delta-V margin.</p>
+
+      <div class="config-grid">
+        <div class="spec-panel">
+          <div class="engine-tabs" role="tablist" aria-label="Engine family">
+            <button type="button" class="engine-tab" role="tab" data-engine="ap90" aria-selected="true">
+              <span class="engine-tab-code">AP-90 · BOOSTER</span>
+              <span class="engine-tab-name">420 kN Methalox</span>
+            </button>
+            <button type="button" class="engine-tab" role="tab" data-engine="ap18" aria-selected="false">
+              <span class="engine-tab-code">AP-18 · VACUUM</span>
+              <span class="engine-tab-name">88 kN Upper Stage</span>
+            </button>
+            <button type="button" class="engine-tab" role="tab" data-engine="ap4" aria-selected="false">
+              <span class="engine-tab-code">AP-4 · ORBITAL</span>
+              <span class="engine-tab-name">14 kN Transfer</span>
+            </button>
+          </div>
+
+          <strong style="font-size:12.5px;font-family:var(--font-mono);text-transform:uppercase;color:var(--ink-slate);">Target Orbit</strong>
+          <div class="orbit-pills" role="group" aria-label="Target orbit">
+            <button type="button" class="orbit-pill" data-orbit="LEO" aria-pressed="true">LEO · 400 km</button>
+            <button type="button" class="orbit-pill" data-orbit="SSO" aria-pressed="false">SSO · 600 km</button>
+            <button type="button" class="orbit-pill" data-orbit="GTO" aria-pressed="false">GTO · 35,786 km</button>
+          </div>
+
+          <div class="slider-block">
+            <div class="slider-head">
+              <label for="payloadSlider">Payload mass</label>
+              <span id="payloadDisplay" style="font-family:var(--font-mono);">2,400 kg</span>
+            </div>
+            <input id="payloadSlider" type="range" min="200" max="12000" step="100" value="2400" />
+            <div style="display:flex;justify-content:space-between;font-size:11.5px;font-family:var(--font-mono);color:var(--ink-slate);margin-top:6px;">
+              <span>200 kg</span><span>12,000 kg</span>
+            </div>
+          </div>
+
+          <p id="engineNote" style="margin:0;font-size:14px;color:var(--ink-slate);">Full-flow staged combustion booster with 40–100% deep throttling and 25-flight turbopump life.</p>
+        </div>
+
+        <aside class="telemetry-readout" aria-label="Calculated propulsion telemetry">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+              <span style="font-family:var(--font-mono);font-size:12px;color:var(--accent-sky);" id="cfgSummaryTag">AP-90 · LEO 400 km</span>
+              <span style="font-family:var(--font-mono);font-size:11px;color:#9AA6AC;">INDICATIVE MODEL</span>
+            </div>
+            <div class="readout-grid">
+              <div class="readout-cell">
+                <span class="readout-k">Specific Impulse</span>
+                <span class="readout-v" id="outIsp">338 s</span>
+              </div>
+              <div class="readout-cell">
+                <span class="readout-k">Est. Burn Duration</span>
+                <span class="readout-v" id="outBurn">164 s</span>
+              </div>
+              <div class="readout-cell">
+                <span class="readout-k">Propellant Load</span>
+                <span class="readout-v" id="outProp">20.8 t</span>
+              </div>
+              <div class="readout-cell">
+                <span class="readout-k">Thrust-to-Weight</span>
+                <span class="readout-v" id="outTwr">1.42</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;font-family:var(--font-mono);">
+              <span>Delta-V mission margin</span>
+              <strong id="outMargin" style="color:var(--accent-sky);">+14.2%</strong>
+            </div>
+            <div class="margin-bar-track">
+              <div class="margin-bar-fill" id="marginBarFill" style="width:74%;"></div>
+            </div>
+            <button type="button" class="btn-carbon" id="sendToRfqBtn" style="width:100%;margin-top:18px;background:#F3F4F6;color:#111414;border-color:#F3F4F6;">Attach spec to Mission RFQ</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Capabilities Matrix -->
+  <section class="band" id="solutions" aria-labelledby="capabilities-title">
+    <div class="band-inner">
+      <span class="mono-tag">Vertical manufacturing</span>
+      <h2 class="section-h2" id="capabilities-title">From powder bed to hot-fire stand in 14 days</h2>
+
+      <div class="cap-list">
+        <div class="cap-item">
+          <button type="button" class="cap-trigger" aria-expanded="true" aria-controls="cap-1">
+            <span class="cap-num">01</span>
+            <span class="cap-title">Additive Copper-Inconel Combustion Chambers</span>
+            <span class="cap-plus">+</span>
+          </button>
+          <div class="cap-panel is-open" id="cap-1">
+            Monolithic regenerative cooling channels printed in GRCop-42 copper alloy with bimetallic Inconel structural jackets — eliminating 480 brazed joints.
+            <div class="cap-spec-row">
+              <span class="spec-chip">WALL TOLERANCE ±0.04 mm</span>
+              <span class="spec-chip">CHAMBER PRESSURE 245 bar</span>
+              <span class="spec-chip">CT-SCAN 100%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cap-item">
+          <button type="button" class="cap-trigger" aria-expanded="false" aria-controls="cap-2">
+            <span class="cap-num">02</span>
+            <span class="cap-title">Cryogenic Dual-Shaft Turbopumps</span>
+            <span class="cap-plus">+</span>
+          </button>
+          <div class="cap-panel" id="cap-2">
+            Hydrostatic liquid-methane bearings rated for 38,000 RPM and rapid restart sequences without helium purge penalties.
+            <div class="cap-spec-row">
+              <span class="spec-chip">38,000 RPM</span>
+              <span class="spec-chip">25-CYCLE QUALIFIED</span>
+              <span class="spec-chip">LOX / LCH4</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cap-item">
+          <button type="button" class="cap-trigger" aria-expanded="false" aria-controls="cap-3">
+            <span class="cap-num">03</span>
+            <span class="cap-title">Triple-Redundant Flight Avionics &amp; Gimbal TVC</span>
+            <span class="cap-plus">+</span>
+          </button>
+          <div class="cap-panel" id="cap-3">
+            Radiation-tolerant engine controllers sampling chamber pressure at 5 kHz with closed-loop electromechanical thrust vectoring.
+            <div class="cap-spec-row">
+              <span class="spec-chip">5 kHz TELEMETRY</span>
+              <span class="spec-chip">±8° GIMBAL</span>
+              <span class="spec-chip">TMR LOCKSTEP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Dark Carbon Telemetry & Test Stand Videos -->
+  <section class="band carbon-band" id="our-edge" aria-labelledby="stats-title">
+    <div class="band-inner">
+      <span class="mono-tag" style="color:var(--accent-sky);">Qualification telemetry</span>
+      <h2 class="section-h2" id="stats-title">Proven on Mojave stands before flight</h2>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num">420 kN</div>
+          <div class="stat-label">Sea-level booster thrust rating</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">368 s</div>
+          <div class="stat-label">Vacuum upper-stage specific impulse</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">99.4%</div>
+          <div class="stat-label">Hot-fire ignition reliability across 180 tests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">14 d</div>
+          <div class="stat-label">Chamber print-to-stand turnaround</div>
+        </div>
+      </div>
+
+      <div class="stand-grid" id="our-team">
+        <article class="stand-card">
+          <video autoplay loop muted playsinline preload="metadata" aria-hidden="true">
+            <source src="./assets/video/orbit-horizon.mp4" type="video/mp4" />
+          </video>
+          <div class="stand-meta">
+            <div>
+              <strong style="display:block;font-size:16px;">AP-18 Vacuum Burn Telemetry</strong>
+              <span style="font-size:13px;color:#9AA6AC;">LEO insertion · 368 s Isp verification</span>
+            </div>
+            <span style="font-family:var(--font-mono);font-size:12px;color:var(--accent-sky);">FLIGHT_09</span>
+          </div>
+        </article>
+
+        <article class="stand-card">
+          <video autoplay loop muted playsinline preload="metadata" aria-hidden="true">
+            <source src="./assets/video/night-pad.mp4" type="video/mp4" />
+          </video>
+          <div class="stand-meta">
+            <div>
+              <strong style="display:block;font-size:16px;">Nocturnal Pad Cryo-Load</strong>
+              <span style="font-size:13px;color:#9AA6AC;">Sub-cooled LOX / LCH4 dress rehearsal</span>
+            </div>
+            <span style="font-family:var(--font-mono);font-size:12px;color:var(--accent-sky);">STAND_04</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Honest Mission RFQ -->
+  <section class="band" id="contact" aria-labelledby="rfqTitle">
+    <div class="band-inner">
+      <div class="rfq-grid">
+        <div>
+          <span class="mono-tag">Program engineering</span>
+          <h2 class="section-h2" id="rfqTitle">Request a propulsion interface dossier</h2>
+          <p style="color:var(--ink-slate);margin:0;">Attach your configured mission parameters from above to validate a local engineering brief. No live server is connected in this standalone preview.</p>
+        </div>
+
+        <form class="spec-panel" id="rfqForm" novalidate>
+          <div class="field-row two">
+            <div class="field">
+              <label for="rfqOrg">Organization</label>
+              <input id="rfqOrg" type="text" placeholder="Orbital Dynamics Corp" required />
+            </div>
+            <div class="field">
+              <label for="rfqEmail">Engineering Email</label>
+              <input id="rfqEmail" type="email" placeholder="propulsion@orbital.example" required />
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:14px;">
+            <label for="rfqSpec">Attached Mission Spec</label>
+            <input id="rfqSpec" type="text" value="AP-90 · LEO 400 km · 2,400 kg payload" readonly />
+          </div>
+          <button type="submit" class="btn-carbon" style="width:100%;">Validate Mission RFQ Preview</button>
+          <div class="rfq-receipt" id="rfqReceipt" role="status"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <strong style="font-family:var(--font-display);letter-spacing:0.12em;color:var(--ink-carbon);">APOGEE PROPULSION</strong>
+      <span>© 2026 Apogee Propulsion Systems · Local demonstration preview — telemetry models and RFQ validation run locally in-browser.</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // 1. Mobile drawer
+      const mobileBtn = document.getElementById('mobileMenuBtn');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+      function setMobile(open) {
+        mobileBtn.setAttribute('aria-expanded', String(open));
+        mobileDrawer.classList.toggle('is-open', open);
+        mobileDrawer.setAttribute('aria-hidden', String(!open));
+      }
+      mobileBtn.addEventListener('click', () => setMobile(mobileBtn.getAttribute('aria-expanded') !== 'true'));
+      mobileDrawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMobile(false)));
+
+      // 2. Scroll-coupled hero frame expansion (M1)
+      const heroFrame = document.getElementById('heroFrame');
+      if (!reducedMotion && heroFrame) {
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(() => {
+            ticking = false;
+            const p = Math.min(1, window.scrollY / 420);
+            heroFrame.style.borderRadius = `${Math.round(26 - p * 14)}px`;
+          });
+        }, { passive: true });
+      }
+
+      // 3. Propulsion & Orbit Configurator (M2)
+      const ENGINES = {
+        ap90: { label: 'AP-90', thrustKn: 420, isp: 338, baseBurn: 150, propFactor: 0.0085, note: 'Full-flow staged combustion booster with 40–100% deep throttling and 25-flight turbopump life.' },
+        ap18: { label: 'AP-18', thrustKn: 88, isp: 368, baseBurn: 340, propFactor: 0.0046, note: 'Radiatively cooled niobium-alloy vacuum upper stage with triple-restart capability for direct GTO insertion.' },
+        ap4:  { label: 'AP-4',  thrustKn: 14, isp: 352, baseBurn: 520, propFactor: 0.0022, note: 'Compact storable-cryo orbital transfer thruster engineered for multi-plane constellation deployment.' }
+      };
+      const ORBITS = {
+        LEO: { name: 'LEO 400 km', mult: 1.0, dvPenalty: 0 },
+        SSO: { name: 'SSO 600 km', mult: 1.18, dvPenalty: 3.4 },
+        GTO: { name: 'GTO 35,786 km', mult: 1.55, dvPenalty: 7.8 }
+      };
+
+      let curEngine = 'ap90';
+      let curOrbit = 'LEO';
+      const payloadSlider = document.getElementById('payloadSlider');
+
+      function updateConfigurator() {
+        const eng = ENGINES[curEngine];
+        const orb = ORBITS[curOrbit];
+        const payload = Number(payloadSlider.value);
+        const burn = Math.round(eng.baseBurn * orb.mult + payload * 0.006);
+        const prop = (payload * eng.propFactor * orb.mult + (eng.thrustKn * 0.018)).toFixed(1);
+        const twr = Math.max(0.45, (eng.thrustKn / ((Number(prop) + payload / 1000) * 9.81)) * 0.78).toFixed(2);
+        const margin = Math.max(2.1, (22.0 - orb.dvPenalty - (payload / 12000) * 9.5)).toFixed(1);
+        const barPct = Math.min(100, Math.max(12, Math.round((Number(margin) / 22) * 100)));
+
+        document.getElementById('payloadDisplay').textContent = `${payload.toLocaleString('en-US')} kg`;
+        document.getElementById('engineNote').textContent = eng.note;
+        document.getElementById('cfgSummaryTag').textContent = `${eng.label} · ${orb.name}`;
+        document.getElementById('outIsp').textContent = `${eng.isp} s`;
+        document.getElementById('outBurn').textContent = `${burn} s`;
+        document.getElementById('outProp').textContent = `${prop} t`;
+        document.getElementById('outTwr').textContent = twr;
+        document.getElementById('outMargin').textContent = `+${margin}%`;
+        document.getElementById('marginBarFill').style.width = `${barPct}%`;
+        document.getElementById('rfqSpec').value = `${eng.label} · ${orb.name} · ${payload.toLocaleString('en-US')} kg payload · +${margin}% ΔV margin`;
+      }
+
+      document.querySelectorAll('[data-engine]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          curEngine = btn.dataset.engine;
+          document.querySelectorAll('[data-engine]').forEach(b => b.setAttribute('aria-selected', String(b === btn)));
+          updateConfigurator();
+        });
+      });
+      document.querySelectorAll('[data-orbit]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          curOrbit = btn.dataset.orbit;
+          document.querySelectorAll('[data-orbit]').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+          updateConfigurator();
+        });
+      });
+      payloadSlider.addEventListener('input', updateConfigurator);
+      document.getElementById('sendToRfqBtn').addEventListener('click', () => {
+        document.getElementById('contact').scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' });
+      });
+      updateConfigurator();
+
+      // 4. Capabilities Accordion (M3)
+      document.querySelectorAll('.cap-trigger').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const open = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', String(!open));
+          document.getElementById(btn.getAttribute('aria-controls')).classList.toggle('is-open', !open);
+        });
+      });
+
+      // 5. Honest Local RFQ Form
+      const rfqReceipt = document.getElementById('rfqReceipt');
+      document.getElementById('rfqForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const org = document.getElementById('rfqOrg').value.trim();
+        const email = document.getElementById('rfqEmail').value.trim();
+        const spec = document.getElementById('rfqSpec').value;
+        if (org.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          rfqReceipt.textContent = 'VALIDATION: Enter an organization name and valid engineering email.';
+          rfqReceipt.classList.add('is-visible');
+          return;
+        }
+        const refId = `APG-26-${curEngine.toUpperCase()}-${curOrbit}`;
+        rfqReceipt.textContent = `LOCAL DEMO PREVIEW [${refId}] — Brief validated for ${org} (${email}) · ${spec}. No RFQ was transmitted over the network.`;
+        rfqReceipt.classList.add('is-visible');
+      });
+    })();
+  </script>
+</body>
+</html>

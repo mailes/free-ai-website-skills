@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Alder Dental, a fictional neighborhood dental practice website demo.">
+<title>Alder Dental — A calmer kind of dental visit</title>
+<style>
+:root{--paper:#f7f3eb;--ink:#23382e;--soft:#647066;--edge:#dcd6c9;--forest:#294639;--sand:#e9dcc7;--g:clamp(20px,5vw,84px)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font:16px/1.55 system-ui,sans-serif}button,input,select{font:inherit}a{color:inherit}button{cursor:pointer}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #aa724a;outline-offset:3px}h1,h2,h3,p{margin:0}h1,h2,h3{font-family:Georgia,serif;font-weight:400;letter-spacing:-.055em}header{display:flex;align-items:center;gap:24px;justify-content:space-between;padding:17px var(--g);border-bottom:1px solid var(--edge)}.logo{font:700 27px Georgia,serif;letter-spacing:-.065em;text-decoration:none}.nav{display:flex;gap:28px;font-size:14px}.nav a{text-decoration:none}.nav a:hover{text-decoration:underline}.button{display:inline-flex;align-items:center;justify-content:center;gap:12px;border:1px solid var(--forest);background:var(--forest);color:white;border-radius:4px;padding:10px 16px;text-decoration:none;font-weight:600;font-size:14px}.button.light{background:transparent;color:var(--forest)}.hero{display:grid;grid-template-columns:1fr 1.1fr;gap:24px;align-items:center;padding:26px var(--g) 44px}.hero-copy{padding:24px 0}.tag{font:12px ui-monospace,monospace;letter-spacing:.13em;text-transform:uppercase;color:var(--soft);margin-bottom:14px}.hero h1{font-size:clamp(50px,6.25vw,106px);line-height:.94;max-width:9ch}.hero em{font-weight:400;color:#617858}.hero p:not(.tag){max-width:34ch;margin:20px 0 24px}.hero img{width:100%;height:clamp(360px,55vh,650px);object-fit:cover;border-radius:5px}.strip{padding:14px var(--g);display:flex;gap:18px;justify-content:space-between;border-block:1px solid var(--edge);font-size:14px}.strip span{color:var(--soft)}
+section.content{padding:clamp(44px,8vw,115px) var(--g)}.section-head{display:flex;align-items:end;justify-content:space-between;gap:25px;margin-bottom:26px}.section-head h2,.visit h2{font-size:clamp(41px,5.6vw,83px);line-height:.98}.section-head>p{max-width:28ch;color:var(--soft)}.services{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.service{position:relative;display:block;width:100%;height:clamp(260px,34vw,470px);overflow:hidden;border:none;border-radius:6px;background:#b3a28e;color:white;text-align:left;padding:0}.service img{width:100%;height:100%;object-fit:cover;transition:transform .65s cubic-bezier(.2,.75,.2,1)}.service:hover img,.service:focus img{transform:scale(1.055)}.service::after{content:"";position:absolute;inset:20% 0 0;background:linear-gradient(transparent,#111d17e0)}.tile-label{position:absolute;z-index:1;inset:auto 20px 21px;display:flex;align-items:end;justify-content:space-between;gap:10px;font:clamp(25px,3vw,44px)/1 Georgia,serif;letter-spacing:-.06em}.tile-label span{font:24px system-ui}.visit{display:grid;grid-template-columns:1fr 1fr;gap:35px;background:var(--sand)}.visit-data{display:grid;gap:16px}.visit-data p{max-width:43ch}.visit-data .button{justify-self:start}.visit-data strong{display:block}.footer{padding:27px var(--g);display:flex;gap:18px;justify-content:space-between;border-top:1px solid var(--edge);color:var(--soft);font-size:13px}
+dialog{width:min(560px,calc(100% - 24px));max-height:90svh;overflow:auto;border:0;border-radius:8px;color:var(--ink);background:var(--paper);padding:26px}dialog::backdrop{background:#1d2e26ae}.close-form{text-align:right}.close{border:1px solid var(--edge);background:none;border-radius:4px;padding:4px 10px;color:var(--ink)}dialog h2{font-size:44px;line-height:1;margin:8px 0 14px}dialog p{margin-bottom:17px}.request{display:grid;gap:13px}.request label{display:grid;gap:5px;font-size:14px;font-weight:600}.request input,.request select{padding:10px;background:white;border:1px solid #abaea2;border-radius:4px;color:var(--ink)}#brief{padding:14px;background:white;border:1px solid var(--edge);white-space:pre-line}.request [hidden], [hidden]{display:none!important}
+@media(max-width:700px){header{gap:12px}.nav{display:none}.hero{grid-template-columns:1fr;gap:5px;padding-top:8px}.hero img{height:320px}.strip{flex-wrap:wrap;gap:5px 16px}.services{grid-template-columns:1fr}.service{height:300px}.section-head{align-items:start;flex-direction:column}.visit{grid-template-columns:1fr}.footer{flex-direction:column;gap:6px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.service img{transition:none}}
+
+.splash{position:fixed;inset:0;z-index:100;display:flex;align-items:end;padding:clamp(24px,4vw,40px);background:white;color:#111;font:bold clamp(72px,12vw,128px)/1 system-ui;font-variant-numeric:tabular-nums;transition:opacity 700ms}
+.splash.exiting{opacity:0}
+.has-motion [data-reveal]{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.16,1,.3,1) var(--delay),transform .6s cubic-bezier(.16,1,.3,1) var(--delay)}
+.has-motion .revealed [data-reveal]{opacity:1;transform:translateY(0)}
+@media(hover:hover){.button:hover{transform:scale(1.05)}.button{transition:transform .2s}}
+.menu-toggle,.mobile-menu{display:none}
+@media(max-width:700px){
+ header{position:relative;z-index:51}.menu-toggle{display:grid;place-items:center;position:relative;width:40px;height:40px;border:1px solid var(--edge);border-radius:6px;background:var(--paper);color:var(--ink)}
+ .menu-toggle span{position:absolute;width:23px;height:2px;border-radius:2px;background:currentColor;transition:transform 300ms cubic-bezier(.76,0,.24,1),opacity 300ms}
+ .menu-toggle span:first-child{transform:translateY(-8px)}.menu-toggle span:last-child{transform:translateY(8px)}
+ .menu-toggle[aria-expanded=true] span:first-child{transform:rotate(45deg)}.menu-toggle[aria-expanded=true] span:nth-child(2){opacity:0;transform:scaleX(0)}.menu-toggle[aria-expanded=true] span:last-child{transform:rotate(-45deg)}
+ .mobile-menu{display:block;position:fixed;inset:0;z-index:50;visibility:hidden;pointer-events:none;transition:visibility 0s .5s}
+ .mobile-menu.open{visibility:visible;pointer-events:auto;transition-delay:0s}
+ .menu-backdrop{position:absolute;inset:0;border:0;background:#1d2e2633;backdrop-filter:blur(4px);opacity:0;transition:opacity .5s}
+ .open .menu-backdrop{opacity:1}
+ .menu-panel{position:absolute;inset:0 0 0 auto;width:min(85%,384px);padding:88px 30px 30px;display:flex;flex-direction:column;justify-content:center;gap:15px;background:var(--paper);box-shadow:-12px 0 38px #1d2e2622;transform:translateX(100%);transition:transform .5s cubic-bezier(.76,0,.24,1)}
+ .open .menu-panel{transform:translateX(0)}
+ .menu-panel a{font:34px/1.15 Georgia,serif;text-decoration:none;opacity:0;transform:translateX(32px);transition:transform .5s cubic-bezier(.76,0,.24,1),opacity .5s}
+ .open .menu-panel a{opacity:1;transform:translateX(0);transition-delay:var(--menu-delay)}
+}
+@media(prefers-reduced-motion:reduce){.button,.menu-toggle span,.mobile-menu,.menu-backdrop,.menu-panel,.menu-panel a{transition:none!important}}
+</style>
+<body>
+<header><a href="#top" class="logo">Alder Dental</a><nav class="nav" aria-label="Main"><a href="#care">Dental care</a><a href="#visit">Your visit</a></nav><button class="button book">Plan a visit ↗</button><button type="button" class="menu-toggle" id="menu-toggle" aria-label="Menu" aria-controls="mobile-menu" aria-expanded="false"><span></span><span></span><span></span></button></header><div class="mobile-menu" id="mobile-menu" inert><button class="menu-backdrop" type="button" aria-label="Close menu" tabindex="-1"></button><nav class="menu-panel" aria-label="Mobile navigation"><a href="#top" style="--menu-delay:100ms">Home</a><a href="#care" style="--menu-delay:160ms">Dental care</a><a href="#visit" style="--menu-delay:220ms">Your visit</a></nav></div>
+<main id="top">
+<section class="hero" aria-label="Welcome"><div class="hero-copy"><p class="tag">Neighborhood dental care</p><h1>A calmer kind of <em>dental visit.</em></h1><p>Clear explanations, thoughtful care and a little more room to ask questions.</p><a class="button light" href="#care">Explore dental care ↓</a></div><img src="assets/reception.webp" alt="Illustrative dental reception with a curved wood desk and warm limestone walls"></section>
+<div class="strip"><strong>Your first visit</strong><span>Tell us what brings you in</span><span>Make a plan at your own pace</span></div>
+<section class="content" id="care"><div class="section-head"><div><p class="tag">Dental care</p><h2>Where can we help?</h2></div><p>Start with what matters to you. Each service explains what to discuss at your first visit.</p></div><div class="services" id="services"></div></section>
+<section class="content visit" id="visit"><div><p class="tag">Your visit</p><h2>Come as you are.</h2></div><div class="visit-data"><p><strong>At your first appointment</strong>Bring your questions, an up-to-date medication list, and any relevant records you already have.</p><p><strong>Example opening hours</strong>Monday–Friday, 8:30 am–5:30 pm</p><p><strong>Example location</strong>14 Alder Lane, Portland · Fictional practice</p><button class="button book">Plan a visit ↗</button></div></section>
+</main>
+<footer class="footer"><span>Alder Dental</span><span>Fictional practice website. Images are illustrative.</span></footer>
+<dialog id="service" aria-labelledby="service-name"><form method="dialog" class="close-form"><button class="close">Close ×</button></form><h2 id="service-name"></h2><p id="service-text"></p><button class="button" id="service-book">Plan a visit ↗</button></dialog>
+<dialog id="booking" aria-labelledby="booking-title"><form method="dialog" class="close-form"><button class="close">Close ×</button></form><h2 id="booking-title">Plan a visit</h2><p>Prepare a local visit brief to copy. Nothing is sent.</p><form class="request" id="request"><label>Visit purpose<select id="reason" required></select></label><label>Preferred day<select id="day" required><option value="">Choose a day</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option></select></label><label>Preferred time<select id="time"><option>Morning</option><option>Afternoon</option><option>Either</option></select></label><button class="button" type="submit">Prepare visit brief</button><output id="brief" hidden aria-live="polite"></output></form></dialog>
+<script>
+const services=[
+ {title:'Checkups & cleaning',image:'checkup.webp',detail:'A checkup is a chance to review your dental history, discuss any changes and ask about a cleaning plan suited to your needs.'},
+ {title:'Smile consultation',image:'smile.webp',detail:'Talk about what you would like to change, what matters most and which options are appropriate to discuss at an in-person assessment.'},
+ {title:'Restorative care',image:'restore.webp',detail:'Discuss how a damaged or missing tooth affects how you eat and speak. An in-person assessment helps identify which options may be suitable.'}
+];
+const el=id=>document.getElementById(id);
+let active=0;
+function openBooking(index){
+ el('request').reset();el('brief').hidden=true;
+ if(index!==undefined)el('reason').value=services[index].title;
+ el('booking').showModal();
+}
+services.forEach(({title,image,detail},index)=>{
+ const button=document.createElement('button');button.className='service';
+ const photo=new Image();photo.src='assets/'+image;photo.alt='';
+ const label=document.createElement('div');label.className='tile-label';label.textContent=title;
+ const arrow=document.createElement('span');arrow.textContent='↗';arrow.setAttribute('aria-hidden','true');label.append(arrow);
+ button.append(photo,label);el('services').append(button);
+ button.onclick=()=>{active=index;el('service-name').textContent=title;el('service-text').textContent=detail;el('service').showModal()};
+ const option=new Option(title,title);el('reason').add(option);
+});
+el('reason').add(new Option('Choose a purpose','',true,true),0);
+document.querySelectorAll('.book').forEach(button=>button.onclick=()=>openBooking());
+el('service-book').onclick=()=>{el('service').close();openBooking(active)};
+el('request').onsubmit=e=>{
+ e.preventDefault();
+ const brief=el('brief');brief.textContent='Visit purpose: '+el('reason').value+'\nPreferred day: '+el('day').value+'\nPreferred time: '+el('time').value+'\nPrepared on this device. No appointment has been booked.';
+ brief.hidden=false;
+};
+el('request').onchange=()=>{el('brief').hidden=true};
+
+const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+if(!reducedMotion.matches){
+ const splash=document.createElement('div');
+ splash.className='splash';splash.setAttribute('aria-hidden','true');splash.textContent='0';
+ document.body.append(splash);
+ const start=performance.now();
+ function count(now){
+  const percent=Math.min(100,Math.floor((now-start)/20));
+  splash.textContent=percent;
+  if(percent<100){requestAnimationFrame(count);return}
+  setTimeout(()=>splash.classList.add('exiting'),200);
+  setTimeout(()=>splash.remove(),900);
+ }
+ requestAnimationFrame(count);
+ if('IntersectionObserver' in window){
+  document.body.classList.add('has-motion');
+  const observer=new IntersectionObserver(entries=>{
+   for(const entry of entries)if(entry.isIntersecting){
+    entry.target.classList.add('revealed');observer.unobserve(entry.target);
+   }
+  },{threshold:.15});
+  for(const [section,items] of [
+   ['.hero','.hero-copy, img'],
+   ['#care','.section-head, .service'],
+   ['#visit',':scope > div'],
+  ]){
+   const group=document.querySelector(section);
+   group.querySelectorAll(items).forEach((item,i)=>{
+    item.dataset.reveal='';item.style.setProperty('--delay',i*120+'ms');
+   });
+   observer.observe(group);
+  }
+ }
+}
+const menuToggle=el('menu-toggle'), menu=el('mobile-menu');
+function setMenu(open){
+ menu.classList.toggle('open',open);menu.inert=!open;
+ menuToggle.setAttribute('aria-expanded',String(open));
+ document.body.style.overflow=open?'hidden':'';
+}
+menuToggle.onclick=()=>setMenu(menuToggle.getAttribute('aria-expanded')!=='true');
+menu.querySelector('.menu-backdrop').onclick=()=>{setMenu(false);menuToggle.focus()};
+menu.querySelectorAll('a').forEach(link=>link.onclick=()=>setMenu(false));
+document.addEventListener('keydown',event=>{
+ if(event.key==='Escape'&&!menu.inert){setMenu(false);menuToggle.focus()}
+});
+matchMedia('(max-width:700px)').addEventListener('change',event=>{if(!event.matches)setMenu(false)});
+</script>
+</body>
+</html>

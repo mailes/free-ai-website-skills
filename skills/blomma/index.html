@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blomma — small-batch fragrances</title>
+<meta name="description" content="Blomma is a fictional small-batch fragrance house demo — scent finder panels, size selection and a local cart. No build, no backend.">
+<style>
+:root{
+  --text:#000; --hero:#332023; --blue:#4BB3ED; --lime:#BDE84F;
+  --ease:cubic-bezier(0.22,1,0.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#fff;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;overflow-x:clip}
+img,video{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid #000;outline-offset:3px}
+.js .anim{opacity:0;transition:opacity 1600ms var(--ease),transform 1600ms var(--ease)}
+.js .anim.in{opacity:1;transform:none!important}
+html.reduced .anim{opacity:1!important;transform:none!important;transition:none!important}
+
+/* hero */
+.hero{position:relative;width:100%;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.hdr{position:absolute;top:0;left:0;width:100%;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.25rem;z-index:40}
+@media(min-width:640px){.hdr{padding:1.5rem 2rem}}
+.hdr .brand{font-weight:900;font-size:.72rem;letter-spacing:.18em;line-height:1.35;text-transform:uppercase;color:var(--hero)}
+.hdr .brand div{display:block}
+.hdr nav{display:flex;gap:1.25rem}
+@media(min-width:640px){.hdr nav{gap:2rem}}
+.hdr nav a{text-decoration:none;color:var(--hero);font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;position:relative}
+.hdr nav a .u{position:absolute;bottom:-2px;left:0;height:1px;width:100%;background:var(--hero);transform-origin:left;transform:scaleX(0);transition:transform .3s ease-out}
+.hdr nav a:hover .u{transform:scaleX(1)}
+.scroll-ind{display:none;position:absolute;right:2rem;top:50%;transform:translateY(-50%);z-index:20;font-family:Georgia,serif;font-style:italic;font-size:1.25rem;letter-spacing:.18em;color:var(--hero)}
+@media(min-width:640px){.scroll-ind{display:block}}
+.idx01{display:none;position:absolute;left:1.5rem;top:50%;z-index:10;color:var(--hero);font-family:'Playfair Display','Didot','Bodoni MT','Times New Roman',serif;font-style:italic;font-weight:400;font-size:clamp(2.5rem,6.5vw,6rem);line-height:1;letter-spacing:-.02em}
+@media(min-width:640px){.idx01{display:block}}
+.hero-bottom{position:relative;z-index:10;padding:0 0 0 1.25rem}
+@media(min-width:640px){.hero-bottom{padding:0 0 3rem 2rem}}
+.hero-title{font-weight:500;text-transform:uppercase;line-height:1.1;letter-spacing:-.01em;font-size:clamp(2.2rem,8vw,4rem)}
+.hero-title .ml{display:block;color:#fff;text-shadow:0 2px 16px rgba(0,0,0,.4)}
+.hero-title .ml2{display:block;color:rgba(255,255,255,.8);text-shadow:0 2px 12px rgba(0,0,0,.35)}
+.hero-title .dl1,.hero-title .dl2{display:none}
+@media(min-width:640px){.hero-title .ml,.hero-title .ml2{display:none}
+.hero-title .dl1{display:block;color:var(--hero)}
+.hero-title .dl2{display:block;color:#B0A2A1}}
+.mcard{display:flex;align-items:center;gap:.75rem;margin:1rem 1.25rem 2rem 0;padding:1rem;border-radius:1rem;background:#fff;box-shadow:0 4px 24px rgba(51,32,35,.08),0 1px 4px rgba(51,32,35,.06)}
+@media(min-width:640px){.mcard{display:none}}
+.dcard{display:none;position:absolute;bottom:2.5rem;right:2.5rem;z-index:30;border-radius:1rem;align-items:center;gap:.5rem;padding:1.25rem 1.25rem;min-width:260px;background:#fff;box-shadow:0 4px 24px rgba(51,32,35,.08),0 1px 4px rgba(51,32,35,.06)}
+@media(min-width:640px){.dcard{display:flex}}
+.pimg{flex-shrink:0;overflow:hidden;width:60px;height:76px;border-radius:8px}
+.pimg img{width:130%;height:130%;object-fit:contain;display:block;margin-left:-15%;margin-top:-15%}
+.pinfo span.name{display:block;font-size:.85rem;font-weight:600;letter-spacing:.04em;line-height:1.25;color:var(--hero)}
+.pinfo span.size{display:block;font-size:11px;font-weight:500;margin-top:3px;color:var(--hero)}
+.addcart{background:none;border:none;font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--hero);margin-top:14px;position:relative;overflow:hidden;padding:0 0 2px;text-align:left}
+.addcart .t{position:relative;z-index:10}
+.addcart .u1,.addcart .u2{position:absolute;bottom:0;left:0;height:1px;width:100%}
+.addcart .u1{background:var(--hero);transform-origin:left;transform:scaleX(1);transition:transform .3s ease-out}
+.addcart .u2{background:var(--hero);opacity:.4;transform-origin:right;transform:scaleX(0);transition:transform .3s ease-out .15s}
+.addcart:hover .u1{transform:scaleX(0)}
+.addcart:hover .u2{transform:scaleX(1)}
+
+/* product panels */
+.panel{position:relative;display:flex;flex-direction:column;padding:1.5rem 1.5rem 2.5rem;min-height:100%}
+@media(min-width:768px){.panel{padding:2rem 2rem 2.5rem}}
+.panel .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:auto;font-size:.75rem}
+.panel .imgblock{display:flex;flex-direction:column;align-items:center;padding:2rem 0;flex:1;justify-content:center}
+.panel .imgwin{overflow:hidden;width:clamp(140px,40%,220px);aspect-ratio:220/340;background:#D9D9D9;border-radius:2px;flex-shrink:0}
+.panel .imgwin img{width:100%;height:100%;object-fit:cover}
+.panel .cap{text-align:center;margin-top:1rem}
+.panel .cap .name{font-size:.875rem}
+.panel .cap .size{font-size:.75rem;margin-top:.25rem}
+.panel .bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.panel .notes{display:flex;flex-direction:column;gap:.125rem}
+.panel .notes .lab{font-size:.75rem;line-height:1.3}
+.panel .notes .ing{font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;line-height:1.3}
+.panel .shop{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;border:1px solid var(--text);padding:.75rem 1.5rem;position:relative;overflow:hidden;background:transparent;flex-shrink:0}
+.panel .shop .fill{position:absolute;inset:0;background:#fff;transform-origin:left;transform:scaleX(0);transition:transform .5s ease-out}
+.panel .shop:hover .fill{transform:scaleX(1)}
+.panel .shop .t{position:relative;z-index:10;transition:color .5s ease}
+.panel .shop:hover .t{color:#000}
+
+/* cart drawer + shop section */
+.shopsec{background:#fff;padding:4rem 1.25rem 5rem}
+@media(min-width:768px){.shopsec{padding:5rem 2rem}}
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;margin:1.6rem 0 1.8rem}
+.fpill{border:1px solid #d9d9d9;background:#fff;border-radius:999px;padding:.5rem 1.1rem;font-size:.85rem;cursor:pointer;transition:all .2s ease}
+.fpill.on{background:var(--text);color:#fff;border-color:var(--text)}
+.pgrid{display:grid;grid-template-columns:1fr;gap:1.6rem}
+@media(min-width:640px){.pgrid{grid-template-columns:repeat(3,1fr)}}
+.pcard{border:1px solid #ececec;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s var(--ease),box-shadow .3s ease}
+.pcard:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(51,32,35,.1)}
+.pcard .im{aspect-ratio:1/1;overflow:hidden;background:#D9D9D9}
+.pcard .im img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.pcard:hover .im img{transform:scale(1.05)}
+.pcard .bd{padding:1rem 1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem;flex:1}
+.pcard .bd h3{font-weight:600;font-size:1rem}
+.pcard .mood{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#767676}
+.sizerow{display:flex;gap:.4rem}
+.sbtn{border:1px solid #d9d9d9;background:#fff;border-radius:8px;padding:.35rem .7rem;font-size:.78rem;cursor:pointer;transition:all .15s ease}
+.sbtn.on{background:var(--text);color:#fff;border-color:var(--text)}
+.addrow{margin-top:auto;display:flex;gap:.5rem}
+.addbtn{flex:1;border:1px solid var(--text);background:transparent;border-radius:8px;padding:.6rem;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;transition:all .2s ease}
+.addbtn:hover{background:var(--text);color:#fff}
+.cartbar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#fff;box-shadow:0 -6px 24px rgba(51,32,35,.12);display:none;justify-content:space-between;align-items:center;gap:1rem;padding:.9rem 1.25rem}
+.cartbar.show{display:flex}
+@media(min-width:640px){.cartbar{left:auto;width:380px;border-radius:14px;right:1.25rem;bottom:1.25rem;flex-direction:column;align-items:stretch}}
+.cartbar .row1{display:flex;justify-content:space-between;align-items:center}
+.cartbar b{font-size:.85rem;letter-spacing:.12em;text-transform:uppercase}
+.cartbar .total{font-weight:700;font-variant-numeric:tabular-nums}
+.cartbar ul{list-style:none;font-size:.82rem;color:#444;max-height:120px;overflow-y:auto}
+.cartbar ul li{display:flex;justify-content:space-between;gap:1rem;padding:.25rem 0}
+.cartbar .btns{display:flex;gap:.5rem}
+.cartbar .ck{flex:1;background:var(--text);color:#fff;border:none;border-radius:8px;padding:.6rem;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.cartbar .cl{background:none;border:1px solid #d9d9d9;border-radius:8px;padding:.6rem .9rem;font-size:.8rem}
+.cartbar .honest{font-size:.7rem;color:#767676}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js');
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('reduced');</script>
+
+<header class="hero" id="top">
+  <video class="hero-video" src="assets/hero-film.mp4" autoplay muted loop playsinline style="playbackRate:1" aria-hidden="true"></video>
+  <div class="hdr anim" data-a="h">
+    <div class="brand"><div>Blomma</div><div>Fragrances</div></div>
+    <nav>
+      <a href="#shop">Shop Now<span class="u"></span></a>
+      <a href="#cartAnchor" id="cartLink">Cart<span class="u"></span></a>
+    </nav>
+  </div>
+  <div class="scroll-ind anim" data-a="s">Scroll</div>
+  <div class="idx01 anim" data-a="i">01</div>
+  <div class="hero-bottom">
+    <h1 class="hero-title">
+      <span class="ml anim" data-a="m1">Sweet Blomma</span>
+      <span class="ml2 anim" data-a="m2">Personal Scent</span>
+      <span class="ml2 anim" data-a="m3">Finder</span>
+      <span class="dl1 anim" data-a="d1">Sweet Blomma</span>
+      <span class="dl2 anim" data-a="d2">Personal Scent</span>
+      <span class="dl2 anim" data-a="d3">Finder</span>
+    </h1>
+  </div>
+  <div class="mcard anim" data-a="mc">
+    <div class="pimg" style="width:56px;height:70px;border-radius:6px"><img src="assets/product-1.webp" alt="Blomma Field"></div>
+    <div class="pinfo" style="flex:1">
+      <span class="name">Blomma Field</span>
+      <span class="size">100 ml / 3.4 oz</span>
+      <button class="addcart" data-add="field"><span class="t">Add to Cart</span><span class="u1"></span><span class="u2"></span></button>
+    </div>
+  </div>
+  <div class="dcard anim" data-a="dc">
+    <div class="pimg"><img src="assets/product-1.webp" alt="Blomma Field"></div>
+    <div class="pinfo">
+      <span class="name">Blomma Field</span>
+      <span class="size">100 ml / 3.4 oz</span>
+      <button class="addcart" data-add="field"><span class="t">Add to Cart</span><span class="u1"></span><span class="u2"></span></button>
+    </div>
+  </div>
+</header>
+
+<section id="scentfinder" class="sect-sf">
+  <div class="md2">
+    <div class="panel" id="sfPanel" style="background:var(--blue)">
+      <div class="top anim" data-a="t1"><span>Blomma soft</span><span>Sweet</span></div>
+      <div class="imgblock anim" data-a="t2">
+        <div class="imgwin"><img src="assets/product-2.webp" alt="Blomma Veil"></div>
+        <div class="cap anim" data-a="t3"><p class="name">Blomma Veil</p><p class="size">100 ml / 3.3 oz</p></div>
+      </div>
+      <div class="bottom">
+        <div class="notes anim" data-a="t4">
+          <p class="lab">Citrus top</p><p class="ing">BERGAMOT</p>
+          <p class="lab">Petal heart</p><p class="ing">ORRIS</p>
+          <p class="lab">Soft base</p><p class="ing">WHITE MUSKS</p>
+        </div>
+        <button class="shop anim" data-a="t5" data-open="veil"><span class="fill"></span><span class="t">Shop Now</span></button>
+      </div>
+    </div>
+    <div class="v-desktop" aria-hidden="true"><video src="assets/scent-film.mp4" autoplay muted loop playsinline></video></div>
+    <div class="v-mobile" aria-hidden="true"><video src="assets/scent-film.mp4" autoplay muted loop playsinline></video></div>
+  </div>
+</section>
+
+<section id="wildscent" class="sect-ws">
+  <div class="md2r">
+    <div class="v-desktop" aria-hidden="true"><video src="assets/wild-film.mp4" autoplay muted loop playsinline></video></div>
+    <div class="v-mobile" aria-hidden="true"><video src="assets/wild-film.mp4" autoplay muted loop playsinline></video></div>
+    <div class="panel" id="wsPanel" style="background:var(--lime)">
+      <div class="top anim" data-a="w1"><span style="font-weight:700">Blomma wild</span><span style="font-weight:700">Playful</span></div>
+      <div class="imgblock anim" data-a="w2">
+        <div class="imgwin"><img src="assets/product-3.webp" alt="Blomma Ember"></div>
+        <div class="cap anim" data-a="w3"><p class="name">Blomma Ember</p><p class="size">100 ml / 3.3 oz</p></div>
+      </div>
+      <div class="bottom">
+        <div class="notes anim" data-a="w4">
+          <p class="lab" style="font-weight:700">Top</p><p class="ing">FIG LEAF ACCORD</p>
+          <p class="lab" style="font-weight:700">Heart</p><p class="ing">CACAO ABSOLUTE</p>
+          <p class="lab" style="font-weight:700">Base</p><p class="ing">VETIVER OIL</p>
+        </div>
+        <button class="shop anim" data-a="w5" data-open="ember"><span class="fill"></span><span class="t">Shop Now</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="shopsec" id="shop">
+  <p class="label" style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#767676" data-motion>The shop</p>
+  <h2 data-motion style="font-weight:600;font-size:1.9rem;letter-spacing:-.02em;margin-top:.7rem">Pick a mood, pick a size.</h2>
+  <div class="filters" data-motion>
+    <button class="fpill on" data-mood="all">All moods</button>
+    <button class="fpill" data-mood="sweet">Sweet</button>
+    <button class="fpill" data-mood="playful">Playful</button>
+    <button class="fpill" data-mood="bold">Bold</button>
+  </div>
+  <div class="pgrid" id="pgrid"></div>
+  <p style="font-size:.72rem;color:#767676;margin-top:1.2rem">Demo shop — flacons shown are real vintage photographs (see SOURCES.md); cart is local and no orders are placed.</p>
+</section>
+
+<div class="cartbar" id="cartBar" role="region" aria-label="Cart">
+  <div class="row1"><b>Your bag</b><span class="total" id="cartTotal">$0</span></div>
+  <ul id="cartList"></ul>
+  <div class="btns">
+    <button class="ck" id="cartCheckout">Checkout</button>
+    <button class="cl" id="cartClear">Clear</button>
+  </div>
+  <p class="honest">Demo cart — nothing is charged or shipped.</p>
+</div>
+
+<style>
+.sect-sf,.sect-ws{position:relative}
+.md2{display:flex;flex-direction:column}
+@media(min-width:768px){.md2{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}}
+.md2r{display:flex;flex-direction:column-reverse}
+@media(min-width:768px){.md2r{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}}
+.v-desktop{display:none;position:relative;overflow:hidden;background:#111;min-height:100%}
+@media(min-width:768px){.v-desktop{display:block}}
+.v-desktop video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.v-mobile{position:relative;overflow:hidden;background:#111;height:75vw}
+@media(min-width:768px){.v-mobile{display:none}}
+.v-mobile video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.label{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase}
+h2{font-weight:600}
+.anim{will-change:opacity,transform}
+</style>
+
+<script>
+/* data */
+const PRODUCTS = [
+  { slug:'field', name:'Blomma Field', size:'100 ml / 3.4 oz', mood:'sweet', img:'assets/product-1.webp', price:140,
+    notes:[['Citrus top','BERGAMOT'],['Petal heart','ORRIS'],['Soft base','WHITE MUSKS']] },
+  { slug:'veil', name:'Blomma Veil', size:'100 ml / 3.3 oz', mood:'playful', img:'assets/product-2.webp', price:130,
+    notes:[['Citrus top','BERGAMOT'],['Petal heart','ORRIS'],['Soft base','WHITE MUSKS']] },
+  { slug:'ember', name:'Blomma Ember', size:'100 ml / 3.3 oz', mood:'bold', img:'assets/product-3.webp', price:150,
+    notes:[['Top','FIG LEAF ACCORD'],['Heart','CACAO ABSOLUTE'],['Base','VETIVER OIL']] }
+];
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (RM) document.querySelectorAll('video').forEach(v => { v.removeAttribute('autoplay'); v.pause(); });
+const $ = s => document.querySelector(s);
+
+/* anim helper — spec: 1600ms cubic-bezier(0.22,1,0.36,1), per-element delay/translate */
+function applyAnim(el, delay, opts = {}) {
+  const { y = 20, x = 0, duration = 1600 } = opts;
+  const from = y !== 0 ? `translateY(${y}px)` : (x !== 0 ? `translateX(${x}px)` : 'none');
+  el.style.opacity = 0;
+  el.style.transform = from;
+  el.style.transition = `opacity ${duration}ms var(--ease) ${delay}ms, transform ${duration}ms var(--ease) ${delay}ms`;
+}
+function show(el) { el.style.opacity = 1; el.style.transform = 'translate(0,0)'; }
+
+/* hero: v=true 200ms after mount, spec stagger */
+if (!RM) {
+  setTimeout(() => {
+    const delays = { h:100, s:1000, i:500, m1:600, m2:800, m3:1000, d1:600, d2:800, d3:1000, mc:1300, dc:1300 };
+    document.querySelectorAll('[data-a]').forEach(el => {
+      const a = el.dataset.a, d = delays[a] || 0;
+      const conf = { h:{y:-10,duration:1400}, s:{x:16,duration:1600}, i:{x:-24,duration:1600},
+        m1:{y:24}, m2:{y:24}, m3:{y:24}, d1:{y:24}, d2:{y:24}, d3:{y:24}, mc:{y:20,duration:1400}, dc:{y:20,duration:1400} }[a] || {};
+      applyAnim(el, d, conf); show(el);
+    });
+  }, 200);
+} else {
+  document.querySelectorAll('[data-a]').forEach(el => { el.style.opacity = 1; el.style.transform = 'none'; });
+}
+
+/* sections: IntersectionObserver 0.15 once, spec stagger */
+function panelObserver(panelSel, ids) {
+  const el = $(panelSel);
+  if (RM) { ids.forEach(([id, delay, o]) => show($(id))); return; }
+  const ob = new IntersectionObserver(entries => {
+    for (const en of entries) if (en.isIntersecting) {
+      ids.forEach(([id, delay, o]) => { applyAnim($(id), delay, o || {}); show($(id)); });
+      ob.unobserve(el);
+    }
+  }, { threshold: 0.15 });
+  ob.observe(el);
+}
+panelObserver('#scentfinder', [
+  ['t1', 0, { y: 12, duration: 1400 }], ['t2', 300, { y: 40, duration: 1800 }],
+  ['t3', 600, { y: 10, duration: 1400 }], ['t4', 900, { y: 16, duration: 1400 }],
+  ['t5', 1150, { y: 16, duration: 1400 }]
+]);
+panelObserver('#wildscent', [
+  ['w1', 0, { y: 12, duration: 1400 }], ['w2', 300, { y: 40, duration: 1800 }],
+  ['w3', 600, { y: 10, duration: 1400 }], ['w4', 900, { y: 16, duration: 1400 }],
+  ['w5', 1150, { y: 16, duration: 1400 }]
+]);
+
+/* fadeUp for shop section (extension) */
+const io2 = new IntersectionObserver(entries => {
+  for (const en of entries) if (en.isIntersecting) {
+    const el = en.target, d = +el.dataset.delay || 0;
+    el.style.transitionDelay = d + 'ms';
+    el.classList.add('in');
+    io2.unobserve(el);
+  }
+}, { rootMargin: '0px 0px -80px 0px', threshold: 0 });
+document.querySelectorAll('[data-motion]').forEach(el => io2.observe(el));
+
+/* shop grid + mood filter + size select */
+const sizes = { field:['50 ml','100 ml'], veil:['50 ml','100 ml'], ember:['50 ml','100 ml'] };
+const chosenSize = {};
+$('#pgrid').innerHTML = PRODUCTS.map(p => `
+  <div class="pcard" data-mood="${p.mood}">
+    <div class="im"><img src="${p.img}" alt="${p.name}" loading="lazy"></div>
+    <div class="bd">
+      <span class="mood">${p.mood}</span>
+      <h3>${p.name}</h3>
+      <div class="sizerow" data-slug="${p.slug}">
+        ${sizes[p.slug].map((s, i) => `<button class="sbtn${i === 1 ? ' on' : ''}" data-size="${s}">${s}</button>`).join('')}
+      </div>
+      <div class="addrow"><button class="addbtn" data-add="${p.slug}">Add to Cart</button></div>
+    </div>
+  </div>`).join('');
+document.querySelectorAll('.fpill').forEach(pill => pill.addEventListener('click', () => {
+  document.querySelectorAll('.fpill').forEach(x => x.classList.toggle('on', x === pill));
+  const m = pill.dataset.mood;
+  document.querySelectorAll('.pcard').forEach(c => { c.style.display = (m === 'all' || c.dataset.mood === m) ? '' : 'none'; });
+}));
+$('#pgrid').addEventListener('click', e => {
+  const s = e.target.closest('.sbtn');
+  if (s) {
+    s.parentElement.querySelectorAll('.sbtn').forEach(x => x.classList.toggle('on', x === s));
+    return;
+  }
+  const add = e.target.closest('[data-add]');
+  if (add) {
+    const slug = add.dataset.add;
+    const sizeEl = document.querySelector(`.sizerow[data-slug="${slug}"] .sbtn.on`);
+    addToCart(slug, sizeEl ? sizeEl.dataset.size : '100 ml');
+  }
+});
+
+/* local cart (honest demo) */
+const cart = [];
+function addToCart(slug, size) {
+  const p = PRODUCTS.find(x => x.slug === slug);
+  const price = size.startsWith('50') ? p.price - 45 : p.price;
+  cart.push({ name: p.name, size, price });
+  renderCart();
+  $('#cartBar').classList.add('show');
+}
+function renderCart() {
+  $('#cartList').innerHTML = cart.map(i => `<li><span>${i.name} · ${i.size}</span><span>$${i.price}</span></li>`).join('');
+  $('#cartTotal').textContent = '$' + cart.reduce((s, i) => s + i.price, 0);
+}
+$('#cartClear').addEventListener('click', () => { cart.length = 0; renderCart(); });
+$('#cartCheckout').addEventListener('click', () => {
+  $('#cartBar').querySelector('.honest').textContent = 'Demo cart — no checkout on a fictional fragrance house.';
+});
+/* cart nav link opens bar */
+$('#cartLink').addEventListener('click', e => { e.preventDefault(); $('#cartBar').classList.add('show'); });
+/* hero floating-card add-to-cart (both desktop + mobile card) */
+document.querySelectorAll('.addcart').forEach(b => b.addEventListener('click', () => addToCart('field', '100 ml')));
+
+/* Shop Now in panels opens shop with the right mood */
+document.querySelectorAll('.shop').forEach(b => b.addEventListener('click', () => {
+  const map = { veil: 'playful', ember: 'bold' };
+  const mood = map[b.dataset.open];
+  const pill = document.querySelector(`.fpill[data-mood="${mood}"]`);
+  if (pill) pill.click();
+  $('#shop').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' });
+}));
+</script>
+</body>
+</html>
