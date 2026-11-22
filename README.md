@@ -1,7 +1,7 @@
 # Free AI Website Skills & Templates (Claude Code · Codex · Cursor)
 
 [![WorkSkill](https://img.shields.io/badge/Powered%20by-WorkSkill-7c3aed?style=flat-square)](https://workskill.tools)
-[![Free Skills](https://img.shields.io/badge/Free%20Website%20Skills-5%20Full%20Masters-10b981?style=flat-square)](https://workskill.tools/skills?access=free)
+[![Free Skills](https://img.shields.io/badge/Free%20Website%20Skills-6%20Full%20Masters-10b981?style=flat-square)](https://workskill.tools/skills?access=free)
 [![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero%20%2F%20Offline%20Ready-111827?style=flat-square)](#quick-start)
 
 > **Stop getting generic purple SaaS templates from your coding agent.**
@@ -17,6 +17,7 @@
 
 | Preview | Skill & Industry | Signature Motion & Interactions | Links |
 | :---: | --- | --- | --- |
+| <img src="./previews/canto.png" width="260" alt="CANTO" /> | **[`canto`](./skills/canto/)** <br/> **Online Learning & Cohort SaaS** | Light-mode Scandinavian EdTech site with expanding 3-card vertical-label accordion hero, live course search, syllabus drawer & team tuition planner. | [Source](./skills/canto/) · [SKILL.md](./skills/canto/SKILL.md) · [Live Video Demo](https://workskill.tools/skills/canto) |
 | <img src="./previews/apogee.png" width="260" alt="APOGEE" /> | **[`apogee`](./skills/apogee/)** <br/> **Aerospace Propulsion Engineering** | Scroll-expanding launchpad video hero, interactive Engine × Orbit × Payload mission configurator, tolerance accordion & Mission RFQ. | [Source](./skills/apogee/) · [SKILL.md](./skills/apogee/SKILL.md) · [Live Video Demo](https://workskill.tools/skills/apogee) |
 | <img src="./previews/rhea-vale.png" width="260" alt="Rhea Vale" /> | **[`rhea-vale`](./skills/rhea-vale/)** <br/> **3D Creator Portfolio** | Interactive 3D creator showcase, project detail viewer & responsive gallery choreography. | [Source](./skills/rhea-vale/) · [SKILL.md](./skills/rhea-vale/SKILL.md) · [Live Video Demo](https://workskill.tools/skills/rhea-vale) |
 | <img src="./previews/blomma.png" width="260" alt="Blomma" /> | **[`blomma`](./skills/blomma/)** <br/> **Botanical Fragrance Storefront** | Scent-note preference filter, bottle size pricing & interactive local shopping bag. | [Source](./skills/blomma/) · [SKILL.md](./skills/blomma/SKILL.md) · [Live Video Demo](https://workskill.tools/skills/blomma) |
@@ -51,11 +52,11 @@ You can also ask your AI agent to read the WorkSkill installer directly:
 Looking for more industries (Fintech, AI SaaS, Luxury Botanical, Real Estate, Cloud Infra, Motion Graphics & PPTX Decks)?
 
 - **[Browse 60+ Free Skills on WorkSkill →](https://workskill.tools/skills?access=free)**
+- **[KORSEN](https://workskill.tools/skills/korsen)** — Dark-Mode Automotive AI & ADAS Cockpit OS with 60fps Canvas Trajectory HUD
+- **[ORIEL](https://workskill.tools/skills/oriel)** — Haute Joaillerie & 5-Axis Bespoke Diamond Ring Atelier with Salon Bag Drawer
 - **[CORRID](https://workskill.tools/skills/corrid)** — Light-Mode Fintech & Live FX Corridor Calculator
 - **[PARLEY](https://workskill.tools/skills/parley)** — Dark-Mode AI Meeting Notes SaaS with Live Canvas Waveform & `.md` Export
 - **[VIREYA](https://workskill.tools/skills/vireya)** — Luxury Botanical Apothecary with 3D Elliptical Ingredient Orbit & Bag Drawer
-- **[CORELINE](https://workskill.tools/skills/coreline)** — Enterprise Infrastructure Platform with Shrinking Pill Nav & Deployment Switcher
-- **[VAREN.](https://workskill.tools/skills/varen)** — Luxury Real Estate Editorial with Expanding Gallery & Floorplan Comparison
 
 ---
 
