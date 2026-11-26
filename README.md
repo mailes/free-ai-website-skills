@@ -1,5 +1,7 @@
 # Free AI Website Skills & Templates (Claude Code · Codex · Cursor)
 
+> **WorkSkill Open-Source Series:** [Awesome Claude 5.5 Videos](https://github.com/mailes/awesome-claude-5-5-videos) · [Awesome Agent Skills](https://github.com/mailes/awesome-agent-skills) · **Free AI Website Skills** · [Awesome Gemini 4 Argon](https://github.com/mailes/awesome-gemini-4-argon) · [Live Store & MCP](https://workskill.tools)
+
 [![WorkSkill](https://img.shields.io/badge/Powered%20by-WorkSkill-7c3aed?style=flat-square)](https://workskill.tools)
 [![Free Skills](https://img.shields.io/badge/Free%20Website%20Skills-6%20Full%20Masters-10b981?style=flat-square)](https://workskill.tools/skills?access=free)
 [![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero%20%2F%20Offline%20Ready-111827?style=flat-square)](#quick-start)
